@@ -25,18 +25,18 @@ All of this lives in [b]42/media/lua[/b]. Eye entries themselves are registered 
 
 [h1]Requirements[/h1]
 [list]
-[*]None. This mod is fully standalone. Should work on most retextures unless they put the eyes in a strange spot.
-[*][b]Dedicated servers must install this mod too.[/b] Clients need the textures.
+[*][b]None[/b]. This mod is fully standalone. Should work on most retextures unless they put the eyes in a strange spot.
+[*][b]Dedicated servers [i]must[/i] install this mod too.[/b] Clients need the textures.
 [/list]
 
 [h1]For Modders - Add your own eyes![/h1]
-This pack is a framework: register entries with hydEyesData.AddEye and they appear in the creation dropdown automatically. Full guide with copy-paste snippets ships with the mod as [b]WIKI.md[/b]. Also available on the Github.
+This pack is a framework: register entries with hydEyesData.AddEye and they appear in the creation dropdown automatically. Full guide with copy-paste snippets ships with the mod as [b]WIKI.md[/b]. Also available on the [url=https://github.com/hyd-n-plyn-syt/hydEyes]Github[/url].
 
 [h1]Conditional compat patches[/h1]
 No extra requirements, each activates only if its target mod is present.
 [list]
-[*][b]GridCharacterHub[/b] - the health-view model keeps your eyes instead of dropping them. Uses a [b]keepOnModel[/b] wrapper so the build keeps the eye slot, plus a per-panel render hook ([b]reInjectGridEyes[/b]) that re-wears your eyes onto the model's desc after every rebuild.
-[*][b]ItIsOfInterestToMe[/b] - your ID card photo wears your eyes ([b]copyLiveEyes[/b] live plus a per-card snapshot so rebuilds survive reloads), and your own card prints the matching eye color in that mod's 3-letter codes ([b]wornEyeCode[/b]): Amber AMB, Black BLA, Blue BLU, Brown BRO, Gray GRY, Green GRN, Hazel HAZ, with Light shades printing as their base color. Random NPC cards stay vanilla.
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3815170396]GridCharacterHub[/url] - the health-view model keeps your eyes instead of dropping them. Uses a [b]keepOnModel[/b] wrapper so the build keeps the eye slot, plus a per-panel render hook ([b]reInjectGridEyes[/b]) that re-wears your eyes onto the model's desc after every rebuild.
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3796373365]ItIsOfInterestToMe[/url] - your ID card photo wears your eyes ([b]copyLiveEyes[/b] live plus a per-card snapshot so rebuilds survive reloads), and your own card prints the matching eye color in that mod's 3-letter codes ([b]wornEyeCode[/b]): Amber AMB, Black BLA, Blue BLU, Brown BRO, Gray GRY, Green GRN, Hazel HAZ, with Light shades printing as their base color. Random NPC cards stay vanilla for now. Might change once I give zombies eyes in a future update.
 [/list]
 
 [h1]Other Compatibility[/h1]
@@ -47,16 +47,14 @@ No extra requirements, each activates only if its target mod is present.
 
 [h1]Roadmap[/h1]
 [list]
-[*]Bloodshot eyes while the Stoned moodlet is active.
 [*]Blinking via skin color-dependent closed-eye graphics.
-[*]Zombie eyes. Dead colored versions fitted to the zombie skins.
-[*]Multiplayer / splitscreen confirmation - single-player only so far.
+[*]Bloodshot eyes while the Stoned moodlet is active.
+[*]Heterochromia via a trait.
+[*]Zombie eyes. Dead-eyed colored versions fitted to the zombie skins, chosen at random for them.
+[*]Multiplayer / splitscreen confirmation - single-player only so far. ([i]Let me know![/i])
 [/list]
 
 [h1]Credits[/h1]
 [list]
 [*]hydnplynsyt - 512x512 eye color overlays and implementation.
 [/list]
-
-Workshop ID:
-Mod ID: hydEyes
