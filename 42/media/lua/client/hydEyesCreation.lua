@@ -69,27 +69,64 @@ end
 local function descSkin(desc)
     local ok, v = pcall(function() return desc:getHumanVisual() end)
     if not ok or not v then return 0 end
-    local okI, i = pcall(function() return v:getSkinTextureIndex() end)
-    if okI and type(i) == "number" then return i end
-    return 0
+    return hydEyesData.skinTone(v)
 end
 
 local function eyeLocation()
     return hydEyesLocation and hydEyesLocation["hydeyes:eyes"] or nil
 end
 
-local function applyEntry(entry)
-    local desc = MainScreen.instance and MainScreen.instance.desc
-    if not desc or not entry then return end
-    local loc = eyeLocation()
+local function eyeLoc(locId)
+    return hydEyesLocation and hydEyesLocation[locId] or nil
+end
+
+local function clearSlot(desc, locId)
+    local loc = eyeLoc(locId)
+    if loc then desc:setWornItem(loc, nil) end
+end
+
+local function wearSide(desc, locId, entry, isFemale, skin, side)
+    local loc = eyeLoc(locId)
     if loc == nil then return end
-    local fullType, tone = hydEyesData.itemFor(entry, desc:isFemale(), descSkin(desc))
+    local fullType, tone = hydEyesData.itemFor(entry, isFemale, skin, side)
     if not fullType then return end
     local ok, item = pcall(instanceItem, fullType)
     if ok and item then
         local v = item:getVisual()
-        if v and tone > 0 then
-            pcall(function() v:setTextureChoice(tone) end)
+        -- Base texture only: these items carry their skin tones in
+        -- <m_BaseTextures>. setTextureChoice would index the (absent)
+        -- <textureChoices> list and the engine would re-roll a random
+        -- texture on every avatar rebuild.
+        -- Always set it, index 0 included: with several base textures the
+        -- engine otherwise picks one at random.
+        if v then
+            pcall(function() v:setBaseTexture(tone) end)
+        end
+        desc:setWornItem(loc, item)
+    end
+end
+
+local function applyEntry(entry)
+    local desc = MainScreen.instance and MainScreen.instance.desc
+    if not desc or not entry then return end
+    local isFemale = desc:isFemale()
+    local skin = descSkin(desc)
+    if hydEyesData.useSplit(entry, isFemale) then
+        clearSlot(desc, "hydeyes:eyes")
+        wearSide(desc, "hydeyes:lefteye", entry, isFemale, skin, "L")
+        wearSide(desc, "hydeyes:righteye", entry, isFemale, skin, "R")
+        return
+    end
+    clearSlot(desc, "hydeyes:lefteye")
+    clearSlot(desc, "hydeyes:righteye")
+    local loc = eyeLocation()
+    if loc == nil then return end
+    local fullType, tone = hydEyesData.itemFor(entry, isFemale, skin)
+    if not fullType then return end
+    local ok, item = pcall(instanceItem, fullType)
+    if ok and item then
+        local v = item:getVisual()
+        if v then
             pcall(function() v:setBaseTexture(tone) end)
         end
         desc:setWornItem(loc, item)
@@ -268,8 +305,11 @@ local function TryInstall()
             if button and button.internal == "NEXT" then
                 pcall(function()
                     local desc = MainScreen.instance.desc
-                    local loc = eyeLocation()
-                    if desc and loc then desc:setWornItem(loc, nil) end
+                    if desc then
+                        clearSlot(desc, "hydeyes:eyes")
+                        clearSlot(desc, "hydeyes:lefteye")
+                        clearSlot(desc, "hydeyes:righteye")
+                    end
                 end)
             end
             return originalPlay(self, button, ...)
@@ -301,6 +341,8 @@ local function TryInstall()
                 if self.hydEyesCombo then
                     fillCombo(self.hydEyesCombo, panelChoiceIndex(self))
                 end
+                -- Re-wear so a Mod Options fallback toggle takes effect here.
+                applyCurrent(self)
             end
         end
     end

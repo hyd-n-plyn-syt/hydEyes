@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<clothingItem>
+    <m_MaleModel></m_MaleModel>
+    <m_FemaleModel></m_FemaleModel>
+    <m_GUID>944883b7-7bc2-4726-bd96-c0b2268d0ce7</m_GUID>
+    <m_Static>false</m_Static>
+    <m_AllowRandomHue>false</m_AllowRandomHue>
+    <m_AllowRandomTint>false</m_AllowRandomTint>
+    <m_AttachBone></m_AttachBone>
+    <m_BaseTextures>Eyes/body01/01LightBrown_01F_R</m_BaseTextures>
+    <m_BaseTextures>Eyes/body02/01LightBrown_02F_R</m_BaseTextures>
+    <m_BaseTextures>Eyes/body03/01LightBrown_03F_R</m_BaseTextures>
+    <m_BaseTextures>Eyes/body04/01LightBrown_04F_R</m_BaseTextures>
+    <m_BaseTextures>Eyes/body05/01LightBrown_05F_R</m_BaseTextures>
+</clothingItem>

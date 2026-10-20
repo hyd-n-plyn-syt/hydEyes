@@ -244,5 +244,484 @@ module hydEyes
         hidden = true,
         Weight = 0,
     }
-
+    item Detail_EyesAmberML
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesAmberML,
+        BodyLocation = hydeyes:lefteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesAmberMR
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesAmberMR,
+        BodyLocation = hydeyes:righteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesAmberFL
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesAmberFL,
+        BodyLocation = hydeyes:lefteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesAmberFR
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesAmberFR,
+        BodyLocation = hydeyes:righteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesBlackML
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesBlackML,
+        BodyLocation = hydeyes:lefteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesBlackMR
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesBlackMR,
+        BodyLocation = hydeyes:righteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesBlackFL
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesBlackFL,
+        BodyLocation = hydeyes:lefteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesBlackFR
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesBlackFR,
+        BodyLocation = hydeyes:righteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesBlueML
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesBlueML,
+        BodyLocation = hydeyes:lefteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesBlueMR
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesBlueMR,
+        BodyLocation = hydeyes:righteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesBlueFL
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesBlueFL,
+        BodyLocation = hydeyes:lefteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesBlueFR
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesBlueFR,
+        BodyLocation = hydeyes:righteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesBrownML
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesBrownML,
+        BodyLocation = hydeyes:lefteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesBrownMR
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesBrownMR,
+        BodyLocation = hydeyes:righteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesBrownFL
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesBrownFL,
+        BodyLocation = hydeyes:lefteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesBrownFR
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesBrownFR,
+        BodyLocation = hydeyes:righteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesGrayML
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesGrayML,
+        BodyLocation = hydeyes:lefteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesGrayMR
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesGrayMR,
+        BodyLocation = hydeyes:righteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesGrayFL
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesGrayFL,
+        BodyLocation = hydeyes:lefteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesGrayFR
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesGrayFR,
+        BodyLocation = hydeyes:righteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesGreenML
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesGreenML,
+        BodyLocation = hydeyes:lefteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesGreenMR
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesGreenMR,
+        BodyLocation = hydeyes:righteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesGreenFL
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesGreenFL,
+        BodyLocation = hydeyes:lefteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesGreenFR
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesGreenFR,
+        BodyLocation = hydeyes:righteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesHazelML
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesHazelML,
+        BodyLocation = hydeyes:lefteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesHazelMR
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesHazelMR,
+        BodyLocation = hydeyes:righteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesHazelFL
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesHazelFL,
+        BodyLocation = hydeyes:lefteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesHazelFR
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesHazelFR,
+        BodyLocation = hydeyes:righteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesLightAmberML
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesLightAmberML,
+        BodyLocation = hydeyes:lefteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesLightAmberMR
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesLightAmberMR,
+        BodyLocation = hydeyes:righteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesLightAmberFL
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesLightAmberFL,
+        BodyLocation = hydeyes:lefteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesLightAmberFR
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesLightAmberFR,
+        BodyLocation = hydeyes:righteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesLightBlueML
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesLightBlueML,
+        BodyLocation = hydeyes:lefteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesLightBlueMR
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesLightBlueMR,
+        BodyLocation = hydeyes:righteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesLightBlueFL
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesLightBlueFL,
+        BodyLocation = hydeyes:lefteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesLightBlueFR
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesLightBlueFR,
+        BodyLocation = hydeyes:righteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesLightBrownML
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesLightBrownML,
+        BodyLocation = hydeyes:lefteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesLightBrownMR
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesLightBrownMR,
+        BodyLocation = hydeyes:righteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesLightBrownFL
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesLightBrownFL,
+        BodyLocation = hydeyes:lefteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesLightBrownFR
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesLightBrownFR,
+        BodyLocation = hydeyes:righteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesLightGreenML
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesLightGreenML,
+        BodyLocation = hydeyes:lefteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesLightGreenMR
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesLightGreenMR,
+        BodyLocation = hydeyes:righteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesLightGreenFL
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesLightGreenFL,
+        BodyLocation = hydeyes:lefteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesLightGreenFR
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesLightGreenFR,
+        BodyLocation = hydeyes:righteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesLightHazelML
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesLightHazelML,
+        BodyLocation = hydeyes:lefteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesLightHazelMR
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesLightHazelMR,
+        BodyLocation = hydeyes:righteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesLightHazelFL
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesLightHazelFL,
+        BodyLocation = hydeyes:lefteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesLightHazelFR
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesLightHazelFR,
+        BodyLocation = hydeyes:righteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
 }

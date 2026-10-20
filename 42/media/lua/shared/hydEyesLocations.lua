@@ -1,4 +1,4 @@
--- The mod's own body location. Lowercase id matches vanilla/CU convention
+-- The mod's own body locations. Lowercase ids match vanilla/CU convention
 -- exactly (base:*, casualtiesundead:*), so script parsing and the runtime
 -- registry agree on it.
 require("NPCs/BodyLocations")
@@ -18,4 +18,10 @@ local function addLocation(name)
     pcall(function() group:moveLocationToIndex(loc, 0) end)
 end
 
+-- Register three eye-related locations:
+-- hydeyes:eyes  : fallback/original single-eye location
+-- hydeyes:lefteye : new left eye slot
+-- hydeyes:righteye : new right eye slot
 addLocation("hydeyes:eyes")
+addLocation("hydeyes:lefteye")
+addLocation("hydeyes:righteye")

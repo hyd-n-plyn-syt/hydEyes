@@ -8,6 +8,8 @@ versionMin=42.0
 
 description= 512x512 eyes in 12 colors for the vanilla bodies, picked from a dropdown on the character creation screen.
 description= <BR>
+description= Left and right eyes are separate art, drawn for every skin tone and both body fits. The original combined graphics ship too and can be switched back on from Options - MODS - Vanilla Eyes.
+description= <BR>
 description= Standalone: no framework required. Eyes wear, persist, and sync as ordinary clothing. Third-party eye packs can register entries and appear in the dropdown automatically.
 description= <BR>
 description= Optional patches included (active only if those mods are present): GridCharacterHub health model keeps your eyes, and ItIsOfInterestToMe ID photos and printed eye colors match them.

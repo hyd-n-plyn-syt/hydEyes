@@ -5,36 +5,32 @@
 -- Covered:
 --   * GridCharacterHub health model: its buildDesc copies the player's
 --     HumanVisual but only keeps underwear/bandage/wound worn items, so eye
---     overlays are dropped. Fixed by also keeping the eye slot.
+--     overlays are dropped. Fixed by also keeping the eye slots.
 --   * ItIsOfInterestToMe ID card photo: its desc is built from skin/hair/
---     beard only. Fixed by copying the player's eye item live plus a snapshot
---     (fullType + tint + texture) in the item's modData so rebuilds restore
---     it. Random NPC cards have no source look and stay vanilla.
+--     beard only (worn items are cleared), so the eyes are re-worn onto it.
+--     Fixed by copying the player's eye items live plus a snapshot
+--     (fullType + tint + base texture) in the item's modData so rebuilds
+--     restore it. Random NPC cards have no source look and stay vanilla.
 --   * ItIsOfInterestToMe printed eye color: the player's OWN card (tagged
 --     iioitmIsOwnCard by that mod) prints their worn eye's registry code.
 --     Frozen once written.
+--
+-- Left and right eyes are two separate items on two body locations
+-- (hydeyes:lefteye / hydeyes:righteye), so every patch below resolves the
+-- slot per item instead of assuming one eye slot. Whatever the player is
+-- wearing is copied: the split graphics by default, the original combined
+-- art when the Mod Options fallback is on.
 
 require("hydEyesData")
 
 local SNAP_KEY = "hydEyesSnap"
 local EYE_SNAP_KEY = "hydEyesEyeCodeSet"
 
-local function eyeLocation()
-    return hydEyesLocation and hydEyesLocation["hydeyes:eyes"] or nil
-end
-
 local function isEyeItem(item)
     if not item then return false end
     local ok, fullType = pcall(function() return item:getFullType() end)
     if not ok or not fullType then return false end
-    if hydEyesData and hydEyesData.Eyes then
-        for _, entry in ipairs(hydEyesData.Eyes) do
-            if entry.male == fullType or entry.female == fullType then
-                return true
-            end
-        end
-    end
-    return false
+    return hydEyesData.isEyeType(fullType)
 end
 
 local function eachEyeItem(player, fn)
@@ -49,12 +45,18 @@ local function eachEyeItem(player, fn)
     end
 end
 
+local function locationFor(fullType)
+    if not (hydEyesData and hydEyesData.locationFor) then
+        return hydEyesLocation and hydEyesLocation["hydeyes:eyes"] or nil
+    end
+    return hydEyesLocation and hydEyesLocation[hydEyesData.locationFor(fullType)] or nil
+end
+
 local function copyLiveEyes(player, desc)
     if not (player and desc) then return end
-    local loc = eyeLocation()
-    if loc == nil then return end
     eachEyeItem(player, function(item)
-        pcall(function() desc:setWornItem(loc, item) end)
+        local loc = locationFor(item:getFullType())
+        if loc then pcall(function() desc:setWornItem(loc, item) end) end
     end)
 end
 
@@ -75,8 +77,8 @@ local function snapshotPlayer(player)
         if okV and v then
             local okT, tint = pcall(function() return v:getTint() end)
             if okT then entry.tint = readFloatColor(tint) end
-            local okC, tc = pcall(function() return v:getTextureChoice() end)
-            if okC and type(tc) == "number" then entry.tex = tc end
+            -- The skin tone lives in the base texture list. The texture
+            -- choice list is not used by these items, so it is not stored.
             local okB, bt = pcall(function() return v:getBaseTexture() end)
             if okB and type(bt) == "number" then entry.base = bt end
         end
@@ -91,7 +93,7 @@ local function applySnapshot(desc, snap)
         if type(e) == "table" and type(e.type) == "string" then
             local ok, item = pcall(instanceItem, e.type)
             if ok and item then
-                local loc = eyeLocation()
+                local loc = locationFor(e.type)
                 if loc then
                     local v = item:getVisual()
                     if v then
@@ -99,9 +101,6 @@ local function applySnapshot(desc, snap)
                             pcall(function()
                                 v:setTint(ImmutableColor.new(e.tint[1], e.tint[2], e.tint[3], 1))
                             end)
-                        end
-                        if type(e.tex) == "number" and v.setTextureChoice then
-                            pcall(function() v:setTextureChoice(e.tex) end)
                         end
                         if type(e.base) == "number" and v.setBaseTexture then
                             pcall(function() v:setBaseTexture(e.base) end)
@@ -118,16 +117,8 @@ local function wornEyeCode(player)
     local code = nil
     eachEyeItem(player, function(item)
         if code then return end
-        if hydEyesData and hydEyesData.Eyes then
-            local fullType = item:getFullType()
-            for _, entry in ipairs(hydEyesData.Eyes) do
-                if (entry.male == fullType or entry.female == fullType)
-                    and entry.code then
-                    code = entry.code
-                    break
-                end
-            end
-        end
+        code = hydEyesData and hydEyesData.codeFor
+            and hydEyesData.codeFor(item:getFullType()) or nil
     end)
     return code
 end
@@ -210,14 +201,6 @@ local function hookIDCardDetails()
     end
 end
 
-local function descSetTone(item, tone)
-    local v = item:getVisual()
-    if v and tone > 0 then
-        if v.setTextureChoice then v:setTextureChoice(tone) end
-        if v.setBaseTexture then v:setBaseTexture(tone) end
-    end
-end
-
 -- GridCharacterHub model reinjection: buildDesc drops everything but
 -- underwear/bandages/wounds before our items are even visible to its filter,
 -- so re-wear the patient's eyes on the model's desc after every rebuild.
@@ -235,11 +218,10 @@ local function reInjectGridEyes(panel)
         if ok then patient = p end
     end
     if not patient then return end
-    local loc = eyeLocation()
-    if not loc then return end
     local injected = false
     eachEyeItem(patient, function(item)
-        if pcall(function() desc:setWornItem(loc, item) end) then
+        local loc = locationFor(item:getFullType())
+        if loc and pcall(function() desc:setWornItem(loc, item) end) then
             injected = true
         end
     end)

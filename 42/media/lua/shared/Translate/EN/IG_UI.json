@@ -1,5 +1,8 @@
 {
     "IGUI_hydEyes_Eyes": "Eye Color",
+    "IGUI_hydEyes_OptionsTitle": "Vanilla Eyes",
+    "IGUI_hydEyes_Fallback": "Use original eye graphics",
+    "IGUI_hydEyes_Fallback_TT": "Reverts to the original combined eye graphics (single slot, one art style for every skin tone) instead of the split left/right eyes drawn per skin tone.",
     "IGUI_Detail_EyesBlue": "Eyes Blue",
     "IGUI_Detail_EyesGreen": "Eyes Green",
     "IGUI_Detail_EyesBrown": "Eyes Brown",

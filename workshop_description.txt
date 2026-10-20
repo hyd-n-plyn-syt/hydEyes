@@ -6,18 +6,27 @@
 
 [h1]Contents[/h1]
 [list]
-[*][b]Eye colors in 12 shades[/b] - Amber, Black, Blue, Brown, Gray, Green, Hazel, Light Amber, Light Blue, Light Brown, Light Green, Light Hazel - with separate male/female fits and per-skin-tone texture slots, eventually. Framework is there, I just have to put pen to pad.
+[*][b]Eye colors in 12 shades[/b] - Amber, Black, Blue, Brown, Gray, Green, Hazel, Light Amber, Light Blue, Light Brown, Light Green, Light Hazel - with separate male/female fits.
+[*][b]Split left and right eyes[/b] - each color ships its own left-eye and right-eye art, worn on two separate slots.
+[*][b]Per-skin-tone artwork[/b] - five skin tones, each drawn for male and female bodies separately, and the mod picks the right one for you.
 [*][b]Creation dropdown[/b] - pick your color right in the body section. Hover previews, the randomize button rolls eyes too, and outfit/gender/skintone changes keep your pick.
 [/list]
 
 [h1]Standalone[/h1]
-Eyes are ordinary clothing worn at the mod's own hydeyes:eyes slot, which nothing else in the game uses - no glasses conflict, no masks, no makeup kits. Single-item, so the engine itself enforces one pair at a time. They ride the creation desc into the game, then persist and sync like any other worn item. No requirements, no known incompatibilities, but may need small patches to show on other mod's 3d paperdoll models.
+Eyes are ordinary clothing worn at the mod's own hydeyes:lefteye and hydeyes:righteye slots, which nothing else in the game uses - no glasses conflict, no masks, no makeup kits. They ride the creation desc into the game, then persist and sync like any other worn item. No requirements, no known incompatibilities, but may need small patches to show on other mod's 3d paperdoll models.
+
+[h1]Options[/h1]
+[b]Options - MODS - Vanilla Eyes[/b]
+[list]
+[*][b]Use original eye graphics[/b] - switches the whole mod back to the pre-split art (one combined piece for both eyes, one style for every skin tone) so you can compare. The split art is the default, and toggling re-dresses your character right away.
+[/list]
 
 [h1]Functions[/h1]
 All of this lives in [b]42/media/lua[/b]. Eye entries themselves are registered with [b]hydEyesData.AddEye[/b] (see the For Modders section).
 [list]
-[*][b]hydEyesData.AddEye[/b] - registers one eye color: male/female items, per-skin-tone texture count, and an optional short code label. The creation dropdown lists entries in registration order.
+[*][b]hydEyesData.AddEye[/b] - registers one eye color: male/female items, optional left/right split items, per-skin-tone texture count, and an optional short code label. The creation dropdown lists entries in registration order.
 [*][b]hydEyesData.itemFor[/b] - picks the wearer's item for an entry: sex fit first, then the skin-tone texture clamped to what the item carries.
+[*][b]hydEyesData.skinTone[/b] - resolves the wearer's skin tone from the body texture name (MaleBody01 through FemaleBody05), which is what the art is numbered by.
 [*][b]Creation dropdown[/b] - built under the body divider on first open. Hovering previews on the avatar, picking wears immediately, the dice rolls a color too, and outfit/gender/skintone changes re-apply the pick.
 [*][b]Play handoff[/b] - the preview copy is stripped before the world loads (so the engine never trips over it) and each spawned player is dressed in their recorded pick - per-player in splitscreen.
 [*][b]hydEyesData.wearOn[/b] - the post-spawn dress call above; also reusable by other mods.
@@ -35,7 +44,7 @@ This pack is a framework: register entries with hydEyesData.AddEye and they appe
 [h1]Conditional compat patches[/h1]
 No extra requirements, each activates only if its target mod is present.
 [list]
-[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3815170396]GridCharacterHub[/url] - the health-view model keeps your eyes instead of dropping them. Uses a [b]keepOnModel[/b] wrapper so the build keeps the eye slot, plus a per-panel render hook ([b]reInjectGridEyes[/b]) that re-wears your eyes onto the model's desc after every rebuild.
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3815170396]GridCharacterHub[/url] - the health-view model keeps your eyes instead of dropping them, both the left and the right slot. Uses a [b]keepOnModel[/b] wrapper so the build keeps the eye slots, plus a per-panel render hook ([b]reInjectGridEyes[/b]) that re-wears your eyes onto the model's desc after every rebuild.
 [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3796373365]ItIsOfInterestToMe[/url] - your ID card photo wears your eyes ([b]copyLiveEyes[/b] live plus a per-card snapshot so rebuilds survive reloads), and your own card prints the matching eye color in that mod's 3-letter codes ([b]wornEyeCode[/b]): Amber AMB, Black BLA, Blue BLU, Brown BRO, Gray GRY, Green GRN, Hazel HAZ, with Light shades printing as their base color. Random NPC cards stay vanilla for now. Might change once I give zombies eyes in a future update.
 [/list]
 
@@ -47,9 +56,9 @@ No extra requirements, each activates only if its target mod is present.
 
 [h1]Roadmap[/h1]
 [list]
-[*]Blinking via skin color-dependent closed-eye graphics.
+[*]Blinking via skin color-dependent closed-eye graphics - the art is done for every skin tone and gender, the timing is not.
 [*]Bloodshot eyes while the Stoned moodlet is active.
-[*]Heterochromia via a trait.
+[*]Heterochromia via a trait - left and right eyes are separate now, so mismatched pairs are easy.
 [*]Zombie eyes. Dead-eyed colored versions fitted to the zombie skins, chosen at random for them.
 [*]Multiplayer / splitscreen confirmation - single-player only so far. ([i]Let me know![/i])
 [/list]

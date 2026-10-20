@@ -40,6 +40,36 @@ registerMyEyes()
 if Events and Events.OnGameBoot then Events.OnGameBoot.Add(registerMyEyes) end
 ```
 
+### Split left/right eyes (optional)
+
+The engine renders one texture per clothing item, so a pack that draws the
+eyes separately needs **one item per side**. Register the split items and
+the mod wears both:
+
+```lua
+hydEyesData.AddEye({
+    labelKey = "IGUI_MyEyes_Blue",
+    male = "MyEyes.Detail_EyesMyBlueM",      -- fallback / single-slot item
+    female = "MyEyes.Detail_EyesMyBlueF",
+    maleL = "MyEyes.Detail_EyesMyBlueML",    -- left eye, male fit
+    maleR = "MyEyes.Detail_EyesMyBlueMR",    -- right eye, male fit
+    femaleL = "MyEyes.Detail_EyesMyBlueFL",  -- left eye, female fit
+    femaleR = "MyEyes.Detail_EyesMyBlueFR",  -- right eye, female fit
+    textures = 1,                            -- tones on the single-slot items
+    splitTextures = 5,                       -- tones on each split item
+})
+```
+
+With the split fields present, picking the color wears the left item on
+`hydeyes:lefteye` and the right item on `hydeyes:righteye`. Without them
+the entry keeps the original single-slot behavior on `hydeyes:eyes`.
+
+**Slot names are not configurable per pack** — the split slots are the
+mod's own `hydeyes:lefteye` / `hydeyes:righteye` locations, so a third-party
+pack reuses them and its left/right items sit on the same slots as this
+pack's. Items are keyed by their own script names, so two packs never
+collide.
+
 ## Textures
 
 512x512 PNGs under `media/textures/`, e.g.
@@ -50,11 +80,19 @@ Male and female heads lay the eye area out differently, so each color ships
 as a male/female item pair (below). Start both on one shared texture; when
 per-sex art lands, point each xml at its own PNG.
 
-Skin tones may also shift the layout. Items support a texture per tone
-without new items: add PNGs in vanilla skintone order (index 0-4) to the
-xml's texture list and raise the entry's `textures` count to match. The worn
-texture is picked from the wearer's tone, clamped to what exists — so
-`textures = 1` (one texture for every tone) is a complete starting point.
+### Skin tones
+
+Vanilla ships five body textures, `MaleBody01`..`MaleBody05` and
+`FemaleBody01`..`FemaleBody05` — tone `01` is the palest, `05` the
+darkest. The mod reads the wearer's skin texture **name** and uses the
+number in it, so the numbering in your art should match the body number.
+
+Items support a texture per tone without new items: add PNGs in tone order
+(01, 02, 03, 04, 05) to the xml's texture list and raise the entry's
+`textures` count to match. The worn texture is picked from the wearer's
+tone, clamped to what exists — so `textures = 1` (one texture for every
+tone) is a complete starting point, and `splitTextures` is the same count
+for the split items.
 
 ## Clothing item xmls
 
@@ -79,6 +117,23 @@ any other mod.
 
 (`m_BaseTextures` is the texture path minus `media/textures/` and `.png`.)
 
+### Several tones on one item
+
+**Repeat the element — do not comma-join.** A texture list is one
+`<m_BaseTextures>` element per texture, in tone order:
+
+```xml
+    <m_BaseTextures>EyesMyPack/EyesMyBlue01</m_BaseTextures>
+    <m_BaseTextures>EyesMyPack/EyesMyBlue02</m_BaseTextures>
+    <m_BaseTextures>EyesMyPack/EyesMyBlue03</m_BaseTextures>
+    <m_BaseTextures>EyesMyPack/EyesMyBlue04</m_BaseTextures>
+    <m_BaseTextures>EyesMyPack/EyesMyBlue05</m_BaseTextures>
+```
+
+A comma-joined list is read as a single (broken) path, and the item then
+fails to load — which silently drops the script item that points at it, and
+the game logs `Couldn't find item <your type>`.
+
 ## Script items
 
 One `item` per xml under your own script module (e.g. `module MyEyes` with
@@ -86,7 +141,7 @@ One `item` per xml under your own script module (e.g. `module MyEyes` with
 locations and item names, so the example item below is
 `MyEyes.Detail_EyesMyBlueM` in full). `item` and `ClothingItem` must match
 the xml filename. The `BodyLocation` is what makes it an eye - your own
-slot no other mod uses (here `MyEyes:Eyes`), single-item so the engine
+slot no other mod uses (here `myeyes:eyes`), single-item so the engine
 enforces one pair at a time. Use all-lowercase location ids; the engine
 normalizes registered ids and mixed case does not resolve.
 
@@ -112,6 +167,28 @@ normalizes registered ids and mixed case does not resolve.
         Weight = 0,
     }
 ```
+
+**The module block needs its own brace line.** A script file that starts
+
+```
+module MyEyes
+    imports
+```
+
+instead of
+
+```
+module MyEyes
+{
+    imports
+```
+
+does not parse, and *no* item in the file is registered — the game then
+logs `Couldn't find item <type>` for every one of them. If your items are
+missing, check this first.
+
+Split items use the mod's eye slots: `hydeyes:lefteye` for the left item
+and `hydeyes:righteye` for the right one.
 
 ## GUID table
 
@@ -153,9 +230,29 @@ require=\hydEyes
 | Field | Meaning |
 |---|---|
 | `male` / `female` | Your M/F script item full types (module included). At least one required. |
-| `textures` | Per-skin-tone textures per item, vanilla tone order (0-4). Default 1. |
+| `maleL` / `maleR` | Optional left/right items, male fit. Worn on `hydeyes:lefteye` / `hydeyes:righteye`. |
+| `femaleL` / `femaleR` | Optional left/right items, female fit. |
+| `textures` | Per-skin-tone textures per single-slot item, tone order (01-05). Default 1. |
+| `splitTextures` | Per-skin-tone textures per split item. Default: same as `textures`. |
 | `label` / `labelKey` | Dropdown text. One of them is required. |
 | `code` | Optional short code label. |
+
+## Engine notes that will save you an afternoon
+
+- **Texture lists are repeated elements**, not comma-joined strings (see
+  above).
+- **Pick the worn texture with `setBaseTexture(index)`, never
+  `setTextureChoice`.** The renderer uses `textureChoices[textureChoice]`
+  when an item has `<textureChoices>` entries and `baseTextures[baseTexture]`
+  otherwise. `setTextureChoice` on an item without `<textureChoices>` is an
+  out-of-range choice, and the engine re-rolls a *random* texture every
+  time it rebuilds the model — the eyes flicker between tones while the
+  mouse moves.
+- **Set the base texture even for index 0.** An item with several base
+  textures and no explicit choice is rendered with a random one, so the
+  palest tone flickers if you only set the texture when the index is
+  greater than zero.
+- The tone index is the body number minus one: body `01` → index 0.
 
 ## Checklist before publishing
 
@@ -163,5 +260,6 @@ require=\hydEyes
    (and a label that resolves).
 2. All GUIDs fresh; no `item` name collides with this pack.
 3. `require` set in `mod.info`.
-4. Tested in creation: entry listed, hover previews, selection persists into
-   the game.
+4. The script file's module block has its brace on its own line.
+5. Tested in creation: entry listed, hover previews, selection persists into
+   the game, and the tone matches the body you picked.
