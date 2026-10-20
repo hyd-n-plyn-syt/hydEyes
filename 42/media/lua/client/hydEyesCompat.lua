@@ -12,7 +12,8 @@
 --     (fullType + tint + base texture) in the item's modData so rebuilds
 --     restore it. Random NPC cards have no source look and stay vanilla.
 --   * ItIsOfInterestToMe printed eye color: the player's OWN card (tagged
---     iioitmIsOwnCard by that mod) prints their worn eye's registry code.
+--     iioitmIsOwnCard by that mod) prints their worn eye's registry code,
+--     left eye first — a heterochromia character prints both ("BLU/GRN").
 --     Frozen once written.
 --
 -- Left and right eyes are two separate items on two body locations
@@ -113,14 +114,31 @@ local function applySnapshot(desc, snap)
     end
 end
 
-local function wornEyeCode(player)
-    local code = nil
+-- The eye codes of a character, left eye first, so a heterochromia
+-- character prints both ("BLU/GRN").
+local function wornEyeCodes(player)
+    local codes = {}
     eachEyeItem(player, function(item)
-        if code then return end
-        code = hydEyesData and hydEyesData.codeFor
-            and hydEyesData.codeFor(item:getFullType()) or nil
+        local fullType = item:getFullType()
+        if not (hydEyesData and hydEyesData.codeFor) then return end
+        local code = hydEyesData.codeFor(fullType)
+        if not code then return end
+        local slot = "hydeyes:eyes"
+        if hydEyesData.locationFor then
+            slot = hydEyesData.locationFor(fullType) or slot
+        end
+        local order = 1
+        if slot == "hydeyes:righteye" then
+            order = 2
+        end
+        codes[#codes + 1] = { order = order, code = code }
     end)
-    return code
+    table.sort(codes, function(a, b) return a.order < b.order end)
+    local parts = {}
+    for _, entry in ipairs(codes) do
+        parts[#parts + 1] = entry.code
+    end
+    return table.concat(parts, "/")
 end
 
 -- GridCharacterHub: keep eye overlays on the health-view model.
@@ -190,8 +208,8 @@ local function hookIDCardDetails()
             local ok, modData = pcall(function() return item:getModData() end)
             if ok and modData and modData.iioitmIsOwnCard == true
                 and not modData[EYE_SNAP_KEY] then
-                local code = wornEyeCode(player)
-                if code then
+                local code = wornEyeCodes(player)
+                if code and code ~= "" then
                     details.eyes = code
                     modData[EYE_SNAP_KEY] = true
                 end

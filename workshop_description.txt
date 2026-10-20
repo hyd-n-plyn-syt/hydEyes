@@ -9,6 +9,7 @@
 [*][b]Eye colors in 12 shades[/b] - Amber, Black, Blue, Brown, Gray, Green, Hazel, Light Amber, Light Blue, Light Brown, Light Green, Light Hazel - with separate male/female fits.
 [*][b]Split left and right eyes[/b] - each color ships its own left-eye and right-eye art, worn on two separate slots.
 [*][b]Per-skin-tone artwork[/b] - five skin tones, each drawn for male and female bodies separately, and the mod picks the right one for you.
+[*][b]Heterochromia trait[/b] - a 1-point disadvantage that gives a character two different eye colors. Pick the trait and the single dropdown becomes [b]Left Eye Color[/b] and [b]Right Eye Color[/b]; the two can never match, not even from the randomize button.
 [*][b]Creation dropdown[/b] - pick your color right in the body section. Hover previews, the randomize button rolls eyes too, and outfit/gender/skintone changes keep your pick.
 [/list]
 
@@ -18,7 +19,7 @@ Eyes are ordinary clothing worn at the mod's own hydeyes:lefteye and hydeyes:rig
 [h1]Options[/h1]
 [b]Options - MODS - Vanilla Eyes[/b]
 [list]
-[*][b]Use original eye graphics[/b] - switches the whole mod back to the pre-split art (one combined piece for both eyes, one style for every skin tone) so you can compare. The split art is the default, and toggling re-dresses your character right away.
+[*][b]Use original eye graphics[/b] - switches the whole mod back to the pre-split art (one combined piece for both eyes, one style for every skin tone) so you can compare. The split art is the default, and toggling re-dresses your character right away. The original art is a single piece, so it cannot show two colors - with the fallback on, Heterochromia is off and the single dropdown is used.
 [/list]
 
 [h1]Functions[/h1]
@@ -45,7 +46,7 @@ This pack is a framework: register entries with hydEyesData.AddEye and they appe
 No extra requirements, each activates only if its target mod is present.
 [list]
 [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3815170396]GridCharacterHub[/url] - the health-view model keeps your eyes instead of dropping them, both the left and the right slot. Uses a [b]keepOnModel[/b] wrapper so the build keeps the eye slots, plus a per-panel render hook ([b]reInjectGridEyes[/b]) that re-wears your eyes onto the model's desc after every rebuild.
-[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3796373365]ItIsOfInterestToMe[/url] - your ID card photo wears your eyes ([b]copyLiveEyes[/b] live plus a per-card snapshot so rebuilds survive reloads), and your own card prints the matching eye color in that mod's 3-letter codes ([b]wornEyeCode[/b]): Amber AMB, Black BLA, Blue BLU, Brown BRO, Gray GRY, Green GRN, Hazel HAZ, with Light shades printing as their base color. Random NPC cards stay vanilla for now. Might change once I give zombies eyes in a future update.
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3796373365]ItIsOfInterestToMe[/url] - your ID card photo wears your eyes ([b]copyLiveEyes[/b] live plus a per-card snapshot so rebuilds survive reloads), and your own card prints the matching eye color in that mod's 3-letter codes ([b]wornEyeCodes[/b]): Amber AMB, Black BLA, Blue BLU, Brown BRO, Gray GRY, Green GRN, Hazel HAZ, with Light shades printing as their base color. Heterochromia characters print both codes, left eye first (BLU/GRN). Random NPC cards stay vanilla for now. Might change once I give zombies eyes in a future update.
 [/list]
 
 [h1]Other Compatibility[/h1]
@@ -58,7 +59,6 @@ No extra requirements, each activates only if its target mod is present.
 [list]
 [*]Blinking via skin color-dependent closed-eye graphics - the art is done for every skin tone and gender, the timing is not.
 [*]Bloodshot eyes while the Stoned moodlet is active.
-[*]Heterochromia via a trait - left and right eyes are separate now, so mismatched pairs are easy.
 [*]Zombie eyes. Dead-eyed colored versions fitted to the zombie skins, chosen at random for them.
 [*]Multiplayer / splitscreen confirmation - single-player only so far. ([i]Let me know![/i])
 [/list]

@@ -27,9 +27,17 @@
 
 hydEyesData = hydEyesData or { Eyes = {} }
 
+-- Full type of the mod's own trait, registered in media/registries.lua.
+hydEyesData.HETEROCHROMIA = "hydEyes:heterochromia"
+
 -- Runtime settings, written by the Mod Options tickbox (hydEyesOptions.lua).
 -- fallback = true reverts to the original single-slot combined graphics.
 hydEyesSettings = hydEyesSettings or { fallback = false }
+
+-- Set by the creation screen while a character with the heterochromia trait
+-- is being built. The trait may not be on the player object yet when the
+-- post-spawn dress runs, so the creation state is used as a fallback.
+hydEyesData.creationHeterochromia = hydEyesData.creationHeterochromia or false
 
 function hydEyesData.AddEye(entry)
     if type(entry) ~= "table" then return end
@@ -125,17 +133,30 @@ end
 -- own index is only a fallback.
 function hydEyesData.skinTone(visual)
     if not visual then return 0 end
+    -- The game stores the skin tone zero-based (the skin picker does
+    -- setSkinTextureIndex(index - 1)) and the body textures are numbered
+    -- 01..05, so the index is the art's tone number minus one.
+    local okIndex, index = pcall(function() return visual:getSkinTextureIndex() end)
+    if okIndex and type(index) == "number" and index >= 0 and index <= 4 then
+        return index
+    end
+    -- Fall back to the skin texture name: MaleBody01..FemaleBody05.
     local okName, name = pcall(function() return visual:getSkinTexture() end)
     if okName and type(name) == "string" then
         local digits = string.match(name, "(%d+)%s*$")
         local n = tonumber(digits)
         if n and n >= 1 and n <= 5 then return n - 1 end
     end
-    local okIndex, index = pcall(function() return visual:getSkinTextureIndex() end)
-    if okIndex and type(index) == "number" then
-        return math.max(0, math.min(index, 4))
-    end
     return 0
+end
+
+-- Whether the character was created with the heterochromia trait.
+-- The state is tracked from the creation screen instead of asking the
+-- character object: the trait methods are not exposed to Lua on every
+-- object (the creation desc has no hasTrait), and in Kahlua a call to a
+-- missing Java method is a hard error that pcall does not catch.
+function hydEyesData.heterochromiaActive()
+    return hydEyesData.creationHeterochromia == true
 end
 
 local function location(locId)
@@ -167,7 +188,9 @@ end
 -- Wear an entry on a live player (post-spawn). Uses the registered
 -- location object, never the item's own lookup. Split graphics wear one
 -- item per eye slot; fallback/third-party entries wear the single item.
-function hydEyesData.wearOn(player, index)
+-- rightIndex is the right eye's pick and is only used when the character
+-- has the heterochromia trait.
+function hydEyesData.wearOn(player, index, rightIndex)
     local entry = hydEyesData.Eyes and hydEyesData.Eyes[index]
     if not entry or not player then return false end
     local okF, isFemale = pcall(function() return player:isFemale() end)
@@ -179,10 +202,15 @@ function hydEyesData.wearOn(player, index)
     local locEyes = location("hydeyes:eyes")
     local locL = location("hydeyes:lefteye")
     local locR = location("hydeyes:righteye")
+    local rightEntry = nil
+    local hetero = hydEyesData.heterochromiaActive()
+    if rightIndex and rightIndex ~= index and hetero then
+        rightEntry = hydEyesData.Eyes and hydEyesData.Eyes[rightIndex]
+    end
     if hydEyesData.useSplit(entry, isFemale) and locL and locR then
         clearSlot(player, locEyes)
         local okL = wearSlot(player, locL, entry, isFemale, skin, "L")
-        local okR = wearSlot(player, locR, entry, isFemale, skin, "R")
+        local okR = wearSlot(player, locR, rightEntry or entry, isFemale, skin, "R")
         return okL and okR
     end
     clearSlot(player, locL)

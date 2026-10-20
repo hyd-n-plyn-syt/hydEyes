@@ -1,0 +1,12 @@
+module hydEyes
+{
+    character_trait_definition hydEyes:heterochromia
+    {
+        IsProfessionTrait = false,
+        DisabledInMultiplayer = false,
+        CharacterTrait = hydEyes:heterochromia,
+        Cost = -1,
+        UIName = UI_trait_heterochromia,
+        UIDescription = UI_trait_heterochromiadesc,
+    }
+}

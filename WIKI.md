@@ -201,6 +201,56 @@ Register every xml in `42/media/fileGuidTable.xml`:
 	</files>
 ```
 
+## Traits (B42)
+
+This mod ships the **Heterochromia** trait: a 1-point disadvantage that
+gives a character two different eye colors. With the trait picked on the
+traits screen, the creation screen swaps the single eye color dropdown for
+**Left Eye Color** and **Right Eye Color**, and the two can never match —
+not even from the randomize button.
+
+Traits are data-driven in B42, so a third-party pack can add its own the
+same way. Two pieces:
+
+**1. Register the trait** in `media/registries.lua` (the game loads this
+file at boot, before the script files):
+
+```lua
+MyEyesRegistries = MyEyesRegistries or {}
+MyEyesRegistries.pirate = CharacterTrait.register("MyEyes:pirate")
+```
+
+**2. Define it** in a script file, e.g. `media/scripts/MyEyesTraits.txt`:
+
+```
+module MyEyes
+{
+    character_trait_definition MyEyes:pirate
+    {
+        IsProfessionTrait = false,
+        DisabledInMultiplayer = false,
+        CharacterTrait = MyEyes:pirate,
+        Cost = -3,
+        UIName = UI_trait_pirate,
+        UIDescription = UI_trait_piratedesc,
+    }
+}
+```
+
+- `Cost` is signed: **negative is a disadvantage** (it gives trait points
+  back), positive is an advantage. `Cost = -1` is a 1-point disadvantage.
+- `UIName` / `UIDescription` are translation keys. The trait name and
+  description keys (`UI_trait_*`) belong in `UI.json` in the same
+  translation folder, next to `IG_UI.json` (which holds the `IGUI_*`
+  row and option labels).
+- The icon is an **18x18 PNG** at `media/ui/Traits/trait_<name>.png`, named
+  after the trait exactly as written in the definition block
+  (`trait_heterochromia.png` for `heterochromia`). The base game's icons
+  sit in `media/ui/Traits/` next to the game install — good references.
+- **Register before you define.** A `character_trait_definition` pointing
+  at an unregistered trait aborts script loading — and a broken script file
+  takes every item in it down with it.
+
 ## Labels
 
 `labelKey = "IGUI_MyEyes_Blue"` shows that key's text. One JSON file,
@@ -253,6 +303,9 @@ require=\hydEyes
   palest tone flickers if you only set the texture when the index is
   greater than zero.
 - The tone index is the body number minus one: body `01` → index 0.
+- A trait is registered in `media/registries.lua` and defined in a script
+  file with `character_trait_definition` (see the Traits section). A
+  negative `Cost` is a disadvantage.
 
 ## Checklist before publishing
 
