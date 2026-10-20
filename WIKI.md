@@ -243,10 +243,11 @@ module MyEyes
   description keys (`UI_trait_*`) belong in `UI.json` in the same
   translation folder, next to `IG_UI.json` (which holds the `IGUI_*`
   row and option labels).
-- The icon is an **18x18 PNG** at `media/ui/Traits/trait_<name>.png`, named
+- The icon is a small PNG at `media/ui/Traits/trait_<name>.png`, named
   after the trait exactly as written in the definition block
-  (`trait_heterochromia.png` for `heterochromia`). The base game's icons
-  sit in `media/ui/Traits/` next to the game install — good references.
+  (`trait_heterochromia.png` for `heterochromia`). The base game uses
+  **18x18** for most traits and **16x16** for a few — either is fine. The
+  base game's icons live in `media/ui/Traits/` next to the game install.
 - **Register before you define.** A `character_trait_definition` pointing
   at an unregistered trait aborts script loading — and a broken script file
   takes every item in it down with it.
