@@ -5,22 +5,25 @@
 -- Covered:
 --   * GridCharacterHub health model: its buildDesc copies the player's
 --     HumanVisual but only keeps underwear/bandage/wound worn items, so eye
---     overlays are dropped. Fixed by also keeping the eye slots.
+--     overlays are dropped. Fixed by also keeping the eye and lash slots.
 --   * ItIsOfInterestToMe ID card photo: its desc is built from skin/hair/
---     beard only (worn items are cleared), so the eyes are re-worn onto it.
---     Fixed by copying the player's eye items live plus a snapshot
---     (fullType + tint + base texture) in the item's modData so rebuilds
---     restore it. Random NPC cards have no source look and stay vanilla.
+--     beard only (worn items are cleared), so the eyes and lashes are
+--     re-worn onto it. Fixed by copying the player's eye/lash items live
+--     plus a snapshot (fullType + tint + base texture) in the item's modData
+--     so rebuilds restore them. Random NPC cards have no source look and
+--     stay vanilla.
 --   * ItIsOfInterestToMe printed eye color: the player's OWN card (tagged
 --     iioitmIsOwnCard by that mod) prints their worn eye's registry code,
 --     left eye first — a heterochromia character prints both ("BLU/GRN").
 --     Frozen once written.
+--   * Spongie's Character Customisation and Tomb's Player Body: their face
+--     art is worn on SPNCC:Face and is drawn over our eye overlay. The
+--     appearance screen re-applies our layers after they refresh the preview.
 --
 -- Left and right eyes are two separate items on two body locations
--- (hydeyes:lefteye / hydeyes:righteye), so every patch below resolves the
--- slot per item instead of assuming one eye slot. Whatever the player is
--- wearing is copied: the split graphics by default, the original combined
--- art when the Mod Options fallback is on.
+-- (hydeyes:lefteye / hydeyes:righteye), and the lashes have their own pair
+-- (hydeyes:leftlash / hydeyes:rightlash), so every patch below resolves the
+-- slot per item instead of assuming one eye slot.
 
 require("hydEyesData")
 
@@ -286,12 +289,68 @@ local function hookGridPanel()
     end
 end
 
+-- Spongie's Character Customisation screen has its own preview survivor and
+-- wears their customisation items on it, so our eyes are not part of that
+-- preview. Their panel pushes the desc to the main avatar first (with every
+-- customisation item on it), then strips the desc down to just the face for
+-- the small portraits. So the eyes go on before each of those pushes.
+local function applyEyesToPreview(desc)
+    if not desc then return end
+    local left = hydEyesChoices and hydEyesChoices[0] or hydEyesChoice or 1
+    local right = hydEyesRightChoices and hydEyesRightChoices[0]
+        or hydEyesRightChoice or left
+    local typ = hydEyesTypeChoices and hydEyesTypeChoices[0]
+        or hydEyesTypeChoice or (hydEyesData.DefaultTypeIndex or 1)
+    local height = hydEyesHeightChoices and hydEyesHeightChoices[0]
+        or hydEyesHeightChoice or (hydEyesData.DefaultHeightIndex or 1)
+    local lash = hydEyesLashChoices and hydEyesLashChoices[0]
+        or hydEyesLashChoice or (hydEyesData.DefaultLashIndex or 1)
+    if hydEyesData and hydEyesData.wearColors then
+        -- The preview survivor carries no traits, so the right eye is applied
+        -- as picked (heterochromia included).
+        pcall(function()
+            hydEyesData.wearColors(desc, left, right, true, typ, height, lash)
+        end)
+    end
+end
+
+local function hookCustomisationPreview()
+    if type(CharacterCustomisationPanel) == "table" then
+        for _, name in ipairs({ "setAvatarDescs", "applyVisual" }) do
+            local original = CharacterCustomisationPanel[name]
+            if type(original) == "function"
+                and not CharacterCustomisationPanel["hydEyesWrapped_" .. name] then
+                CharacterCustomisationPanel["hydEyesWrapped_" .. name] = true
+                CharacterCustomisationPanel[name] = function(self, ...)
+                    -- Before the original: the push it does must include the
+                    -- eyes, and the desc it leaves behind (face only) must
+                    -- have them on for the small portraits.
+                    pcall(function() applyEyesToPreview(self.previewDesc) end)
+                    return original(self, ...)
+                end
+            end
+        end
+    end
+    if type(BodyDetailAvatar) == "table" then
+        local original = BodyDetailAvatar.applyVisual
+        if type(original) == "function"
+            and not BodyDetailAvatar.hydEyesPreviewHooked then
+            BodyDetailAvatar.hydEyesPreviewHooked = true
+            BodyDetailAvatar.applyVisual = function(self, selectedFace, ...)
+                pcall(function() applyEyesToPreview(self.desc) end)
+                return original(self, selectedFace, ...)
+            end
+        end
+    end
+end
+
 local function TryInstall()
     hookGrid()
     hookIDCards()
     hookIDCardDetails()
     hookModelDesc()
     hookGridPanel()
+    hookCustomisationPreview()
 end
 
 TryInstall()

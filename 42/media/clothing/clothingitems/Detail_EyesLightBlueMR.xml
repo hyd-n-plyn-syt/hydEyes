@@ -7,9 +7,16 @@
     <m_AllowRandomHue>false</m_AllowRandomHue>
     <m_AllowRandomTint>false</m_AllowRandomTint>
     <m_AttachBone></m_AttachBone>
-    <m_BaseTextures>Eyes/body01/01LightBlue_01M_R</m_BaseTextures>
-    <m_BaseTextures>Eyes/body02/01LightBlue_02M_R</m_BaseTextures>
-    <m_BaseTextures>Eyes/body03/01LightBlue_03M_R</m_BaseTextures>
-    <m_BaseTextures>Eyes/body04/01LightBlue_04M_R</m_BaseTextures>
-    <m_BaseTextures>Eyes/body05/01LightBlue_05M_R</m_BaseTextures>
+    <m_BaseTextures>Eyes/01/low/01LightBlue_R</m_BaseTextures>
+    <m_BaseTextures>Eyes/01/normal/01LightBlue_R</m_BaseTextures>
+    <m_BaseTextures>Eyes/01/high/01LightBlue_R</m_BaseTextures>
+    <m_BaseTextures>Eyes/02/low/02LightBlue_R</m_BaseTextures>
+    <m_BaseTextures>Eyes/02/normal/02LightBlue_R</m_BaseTextures>
+    <m_BaseTextures>Eyes/02/high/02LightBlue_R</m_BaseTextures>
+    <m_BaseTextures>Eyes/03/low/03LightBlue_R</m_BaseTextures>
+    <m_BaseTextures>Eyes/03/normal/03LightBlue_R</m_BaseTextures>
+    <m_BaseTextures>Eyes/03/high/03LightBlue_R</m_BaseTextures>
+    <m_BaseTextures>Eyes/04/low/04LightBlue_R</m_BaseTextures>
+    <m_BaseTextures>Eyes/04/normal/04LightBlue_R</m_BaseTextures>
+    <m_BaseTextures>Eyes/04/high/04LightBlue_R</m_BaseTextures>
 </clothingItem>

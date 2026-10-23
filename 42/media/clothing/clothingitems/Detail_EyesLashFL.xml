@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<clothingItem>
+    <m_MaleModel></m_MaleModel>
+    <m_FemaleModel></m_FemaleModel>
+    <m_GUID>403eb02e-178b-49ae-a966-2720bf5f2645</m_GUID>
+    <m_Static>false</m_Static>
+    <m_AllowRandomHue>false</m_AllowRandomHue>
+    <m_AllowRandomTint>false</m_AllowRandomTint>
+    <m_AttachBone></m_AttachBone>
+    <m_BaseTextures>Eyes/01/low/01_LashShort_L</m_BaseTextures>
+    <m_BaseTextures>Eyes/01/low/01_LashLong_L</m_BaseTextures>
+    <m_BaseTextures>Eyes/01/normal/01_LashShort_L</m_BaseTextures>
+    <m_BaseTextures>Eyes/01/normal/01_LashLong_L</m_BaseTextures>
+    <m_BaseTextures>Eyes/01/high/01_LashShort_L</m_BaseTextures>
+    <m_BaseTextures>Eyes/01/high/01_LashLong_L</m_BaseTextures>
+    <m_BaseTextures>Eyes/02/low/02_LashShort_L</m_BaseTextures>
+    <m_BaseTextures>Eyes/02/low/02_LashLong_L</m_BaseTextures>
+    <m_BaseTextures>Eyes/02/normal/02_LashShort_L</m_BaseTextures>
+    <m_BaseTextures>Eyes/02/normal/02_LashLong_L</m_BaseTextures>
+    <m_BaseTextures>Eyes/02/high/02_LashShort_L</m_BaseTextures>
+    <m_BaseTextures>Eyes/02/high/02_LashLong_L</m_BaseTextures>
+    <m_BaseTextures>Eyes/03/low/03_LashShort_L</m_BaseTextures>
+    <m_BaseTextures>Eyes/03/low/03_LashLong_L</m_BaseTextures>
+    <m_BaseTextures>Eyes/03/normal/03_LashShort_L</m_BaseTextures>
+    <m_BaseTextures>Eyes/03/normal/03_LashLong_L</m_BaseTextures>
+    <m_BaseTextures>Eyes/03/high/03_LashShort_L</m_BaseTextures>
+    <m_BaseTextures>Eyes/03/high/03_LashLong_L</m_BaseTextures>
+    <m_BaseTextures>Eyes/04/low/04_LashShort_L</m_BaseTextures>
+    <m_BaseTextures>Eyes/04/low/04_LashLong_L</m_BaseTextures>
+    <m_BaseTextures>Eyes/04/normal/04_LashShort_L</m_BaseTextures>
+    <m_BaseTextures>Eyes/04/normal/04_LashLong_L</m_BaseTextures>
+    <m_BaseTextures>Eyes/04/high/04_LashShort_L</m_BaseTextures>
+    <m_BaseTextures>Eyes/04/high/04_LashLong_L</m_BaseTextures>
+</clothingItem>

@@ -3,12 +3,12 @@ id=hydEyes
 author=hydnplynsyt
 poster=poster.png
 icon=icon.png
-modversion=1
+modversion=3
 versionMin=42.0
 
-description= 512x512 eyes in 12 colors for the vanilla bodies, picked from a dropdown on the character creation screen.
+description= 512x512 eyes in 12 colors for the vanilla bodies, with selectable eye shape, eye height, and lash length, picked from dropdowns on the character creation screen.
 description= <BR>
-description= Left and right eyes are separate art, drawn for every skin tone and both body fits. The original combined graphics ship too and can be switched back on from Options - MODS - Vanilla Eyes.
+description= Left and right eyes are separate art, drawn for both body fits. Eyes and lashes are separate layers, so the lashes draw over the eye color and changing one never replaces the other.
 description= <BR>
 description= Standalone: no framework required. Eyes wear, persist, and sync as ordinary clothing. Third-party eye packs can register entries and appear in the dropdown automatically.
 description= <BR>
