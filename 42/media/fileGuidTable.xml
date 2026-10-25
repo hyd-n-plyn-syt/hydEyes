@@ -1,100 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <fileGuidTable>
 	<files>
-		<path>media/clothing/clothingItems/Detail_EyesAmberM.xml</path>
-		<guid>28c97d9c-427e-4e7f-b8ea-fc36fc1baa89</guid>
+		<path>media/clothing/clothingItems/Detail_EyesAmberFL.xml</path>
+		<guid>c6c0f469-403d-4ca7-9d35-adf208234ed4</guid>
 	</files>
 	<files>
-		<path>media/clothing/clothingItems/Detail_EyesAmberF.xml</path>
-		<guid>1567ad87-aa8f-42d0-b7fc-8bb5e9baf5f7</guid>
-	</files>
-	<files>
-		<path>media/clothing/clothingItems/Detail_EyesBlackM.xml</path>
-		<guid>72bbe3a0-cdb5-42a9-b1d7-9ab16631134e</guid>
-	</files>
-	<files>
-		<path>media/clothing/clothingItems/Detail_EyesBlackF.xml</path>
-		<guid>9a3c4526-67c5-459e-b0eb-2536acea2095</guid>
-	</files>
-	<files>
-		<path>media/clothing/clothingItems/Detail_EyesBlueM.xml</path>
-		<guid>e46600fb-1bd3-4339-9662-9ff05240e951</guid>
-	</files>
-	<files>
-		<path>media/clothing/clothingItems/Detail_EyesBlueF.xml</path>
-		<guid>20eb9378-37a4-4f43-8784-717a3514761e</guid>
-	</files>
-	<files>
-		<path>media/clothing/clothingItems/Detail_EyesBrownM.xml</path>
-		<guid>de8e975f-5518-455c-a938-5b44d370ad1c</guid>
-	</files>
-	<files>
-		<path>media/clothing/clothingItems/Detail_EyesBrownF.xml</path>
-		<guid>92410d91-fe4a-4e80-9157-c751650bbc1f</guid>
-	</files>
-	<files>
-		<path>media/clothing/clothingItems/Detail_EyesGrayM.xml</path>
-		<guid>29b623dc-2be6-4c33-99d4-d5b1feed027d</guid>
-	</files>
-	<files>
-		<path>media/clothing/clothingItems/Detail_EyesGrayF.xml</path>
-		<guid>227d6af9-646c-4b47-83ea-560757417943</guid>
-	</files>
-	<files>
-		<path>media/clothing/clothingItems/Detail_EyesGreenM.xml</path>
-		<guid>94f7b4a4-a3c8-45fa-b443-cced539728cc</guid>
-	</files>
-	<files>
-		<path>media/clothing/clothingItems/Detail_EyesGreenF.xml</path>
-		<guid>36e1aa9d-4333-4099-abc3-f1e84464a072</guid>
-	</files>
-	<files>
-		<path>media/clothing/clothingItems/Detail_EyesHazelM.xml</path>
-		<guid>b419316b-4b7f-44c4-8fbe-23157abebbf4</guid>
-	</files>
-	<files>
-		<path>media/clothing/clothingItems/Detail_EyesHazelF.xml</path>
-		<guid>bb39af2e-97bd-44b6-9321-18b38d7f514f</guid>
-	</files>
-	<files>
-		<path>media/clothing/clothingItems/Detail_EyesLightAmberM.xml</path>
-		<guid>17693444-1f20-4ff7-8923-91314b31334b</guid>
-	</files>
-	<files>
-		<path>media/clothing/clothingItems/Detail_EyesLightAmberF.xml</path>
-		<guid>040bc071-c461-4515-b3ac-fe266bef38e5</guid>
-	</files>
-	<files>
-		<path>media/clothing/clothingItems/Detail_EyesLightBlueM.xml</path>
-		<guid>eba722a6-5317-4ea6-a02b-a1a91694309e</guid>
-	</files>
-	<files>
-		<path>media/clothing/clothingItems/Detail_EyesLightBlueF.xml</path>
-		<guid>7a8acdd8-810f-4cd7-a3e3-48e6bd5f75d0</guid>
-	</files>
-	<files>
-		<path>media/clothing/clothingItems/Detail_EyesLightBrownM.xml</path>
-		<guid>749bba6d-79da-4ebd-b962-3e65ca703fef</guid>
-	</files>
-	<files>
-		<path>media/clothing/clothingItems/Detail_EyesLightBrownF.xml</path>
-		<guid>44132a65-be96-47a7-aff4-a239b0a3d439</guid>
-	</files>
-	<files>
-		<path>media/clothing/clothingItems/Detail_EyesLightGreenM.xml</path>
-		<guid>d92b1fd7-6f91-446a-9230-6cb821529cd4</guid>
-	</files>
-	<files>
-		<path>media/clothing/clothingItems/Detail_EyesLightGreenF.xml</path>
-		<guid>6b59e82a-1da8-4fcc-80ca-fbc5475cc37b</guid>
-	</files>
-	<files>
-		<path>media/clothing/clothingItems/Detail_EyesLightHazelM.xml</path>
-		<guid>793822c8-7bae-413b-8fd5-c5a0a2efcb36</guid>
-	</files>
-	<files>
-		<path>media/clothing/clothingItems/Detail_EyesLightHazelF.xml</path>
-		<guid>a6014ece-ee25-4e57-b8a7-3e7d88cddf5f</guid>
+		<path>media/clothing/clothingItems/Detail_EyesAmberFR.xml</path>
+		<guid>e68b73ef-ecae-433f-b7fa-a2b08dbaf819</guid>
 	</files>
 	<files>
 		<path>media/clothing/clothingItems/Detail_EyesAmberML.xml</path>
@@ -105,12 +17,12 @@
 		<guid>ed407850-84e5-4230-ad10-eed42cb29909</guid>
 	</files>
 	<files>
-		<path>media/clothing/clothingItems/Detail_EyesAmberFL.xml</path>
-		<guid>c6c0f469-403d-4ca7-9d35-adf208234ed4</guid>
+		<path>media/clothing/clothingItems/Detail_EyesBlackFL.xml</path>
+		<guid>23daf8fa-c1ad-4d98-9fc9-291a73c7351f</guid>
 	</files>
 	<files>
-		<path>media/clothing/clothingItems/Detail_EyesAmberFR.xml</path>
-		<guid>e68b73ef-ecae-433f-b7fa-a2b08dbaf819</guid>
+		<path>media/clothing/clothingItems/Detail_EyesBlackFR.xml</path>
+		<guid>95efccc1-81eb-41c8-af46-e8d3f306d7ab</guid>
 	</files>
 	<files>
 		<path>media/clothing/clothingItems/Detail_EyesBlackML.xml</path>
@@ -121,20 +33,12 @@
 		<guid>f00364e6-bde0-4468-a903-5b9dfdd33cb8</guid>
 	</files>
 	<files>
-		<path>media/clothing/clothingItems/Detail_EyesBlackFL.xml</path>
-		<guid>23daf8fa-c1ad-4d98-9fc9-291a73c7351f</guid>
+		<path>media/clothing/clothingItems/Detail_EyesBloodshotL.xml</path>
+		<guid>763c13aa-b907-4bae-aec3-ef17ed24e016</guid>
 	</files>
 	<files>
-		<path>media/clothing/clothingItems/Detail_EyesBlackFR.xml</path>
-		<guid>95efccc1-81eb-41c8-af46-e8d3f306d7ab</guid>
-	</files>
-	<files>
-		<path>media/clothing/clothingItems/Detail_EyesBlueML.xml</path>
-		<guid>9fd40b1a-00ed-497c-94ea-6c5e7311e580</guid>
-	</files>
-	<files>
-		<path>media/clothing/clothingItems/Detail_EyesBlueMR.xml</path>
-		<guid>24caf1b2-5109-4738-95cb-270ca8567cb5</guid>
+		<path>media/clothing/clothingItems/Detail_EyesBloodshotR.xml</path>
+		<guid>9743aadf-0311-4c04-94d0-5f58d1c623c2</guid>
 	</files>
 	<files>
 		<path>media/clothing/clothingItems/Detail_EyesBlueFL.xml</path>
@@ -145,12 +49,12 @@
 		<guid>0b665cb2-ddfe-4e55-9134-a7d1de34bf91</guid>
 	</files>
 	<files>
-		<path>media/clothing/clothingItems/Detail_EyesBrownML.xml</path>
-		<guid>7d490442-c93c-4ba2-af5a-c24c75d14292</guid>
+		<path>media/clothing/clothingItems/Detail_EyesBlueML.xml</path>
+		<guid>9fd40b1a-00ed-497c-94ea-6c5e7311e580</guid>
 	</files>
 	<files>
-		<path>media/clothing/clothingItems/Detail_EyesBrownMR.xml</path>
-		<guid>9776a8a2-263c-4ad3-b0b4-93fae573e66e</guid>
+		<path>media/clothing/clothingItems/Detail_EyesBlueMR.xml</path>
+		<guid>24caf1b2-5109-4738-95cb-270ca8567cb5</guid>
 	</files>
 	<files>
 		<path>media/clothing/clothingItems/Detail_EyesBrownFL.xml</path>
@@ -161,12 +65,12 @@
 		<guid>17e16bf5-b6c8-4290-b978-5cf4f846b2bb</guid>
 	</files>
 	<files>
-		<path>media/clothing/clothingItems/Detail_EyesGrayML.xml</path>
-		<guid>954d91b6-1671-4661-bebd-dba99e3ad92b</guid>
+		<path>media/clothing/clothingItems/Detail_EyesBrownML.xml</path>
+		<guid>7d490442-c93c-4ba2-af5a-c24c75d14292</guid>
 	</files>
 	<files>
-		<path>media/clothing/clothingItems/Detail_EyesGrayMR.xml</path>
-		<guid>c4e183b9-049d-4ca5-9b92-1f1242184359</guid>
+		<path>media/clothing/clothingItems/Detail_EyesBrownMR.xml</path>
+		<guid>9776a8a2-263c-4ad3-b0b4-93fae573e66e</guid>
 	</files>
 	<files>
 		<path>media/clothing/clothingItems/Detail_EyesGrayFL.xml</path>
@@ -177,12 +81,12 @@
 		<guid>783c6b3b-ece2-473e-ae6e-621465d7a4c6</guid>
 	</files>
 	<files>
-		<path>media/clothing/clothingItems/Detail_EyesGreenML.xml</path>
-		<guid>6a3fa510-b104-4bca-b0af-d285a0348d71</guid>
+		<path>media/clothing/clothingItems/Detail_EyesGrayML.xml</path>
+		<guid>954d91b6-1671-4661-bebd-dba99e3ad92b</guid>
 	</files>
 	<files>
-		<path>media/clothing/clothingItems/Detail_EyesGreenMR.xml</path>
-		<guid>6513428e-7e8c-4467-988e-27e6b87d24bc</guid>
+		<path>media/clothing/clothingItems/Detail_EyesGrayMR.xml</path>
+		<guid>c4e183b9-049d-4ca5-9b92-1f1242184359</guid>
 	</files>
 	<files>
 		<path>media/clothing/clothingItems/Detail_EyesGreenFL.xml</path>
@@ -193,12 +97,12 @@
 		<guid>091b1483-1eba-4747-ba81-8a9ccc709a31</guid>
 	</files>
 	<files>
-		<path>media/clothing/clothingItems/Detail_EyesHazelML.xml</path>
-		<guid>5695fca4-e6d8-49e1-a30a-22c79c1e21c5</guid>
+		<path>media/clothing/clothingItems/Detail_EyesGreenML.xml</path>
+		<guid>6a3fa510-b104-4bca-b0af-d285a0348d71</guid>
 	</files>
 	<files>
-		<path>media/clothing/clothingItems/Detail_EyesHazelMR.xml</path>
-		<guid>e3b0ad52-ad4b-4bd3-bc1c-4430cc9ac73c</guid>
+		<path>media/clothing/clothingItems/Detail_EyesGreenMR.xml</path>
+		<guid>6513428e-7e8c-4467-988e-27e6b87d24bc</guid>
 	</files>
 	<files>
 		<path>media/clothing/clothingItems/Detail_EyesHazelFL.xml</path>
@@ -209,12 +113,36 @@
 		<guid>d7494b32-2c37-4e77-954f-0d9000f1fe96</guid>
 	</files>
 	<files>
-		<path>media/clothing/clothingItems/Detail_EyesLightAmberML.xml</path>
-		<guid>1370d8f2-37e9-433b-b907-bcc98b1ff5dc</guid>
+		<path>media/clothing/clothingItems/Detail_EyesHazelML.xml</path>
+		<guid>5695fca4-e6d8-49e1-a30a-22c79c1e21c5</guid>
 	</files>
 	<files>
-		<path>media/clothing/clothingItems/Detail_EyesLightAmberMR.xml</path>
-		<guid>a04bab2a-f1e6-4b29-a4e9-fd6ba06618c5</guid>
+		<path>media/clothing/clothingItems/Detail_EyesHazelMR.xml</path>
+		<guid>e3b0ad52-ad4b-4bd3-bc1c-4430cc9ac73c</guid>
+	</files>
+	<files>
+		<path>media/clothing/clothingItems/Detail_EyesInfectedL.xml</path>
+		<guid>9fc8b28b-34c0-4837-bd2c-4216764dc355</guid>
+	</files>
+	<files>
+		<path>media/clothing/clothingItems/Detail_EyesInfectedR.xml</path>
+		<guid>76dd0bfb-4ca6-4f7a-81d0-c23e9620dde8</guid>
+	</files>
+	<files>
+		<path>media/clothing/clothingItems/Detail_EyesLashFL.xml</path>
+		<guid>403eb02e-178b-49ae-a966-2720bf5f2645</guid>
+	</files>
+	<files>
+		<path>media/clothing/clothingItems/Detail_EyesLashFR.xml</path>
+		<guid>406b8541-d091-4ad5-8b89-5ad1fc8d5870</guid>
+	</files>
+	<files>
+		<path>media/clothing/clothingItems/Detail_EyesLashML.xml</path>
+		<guid>a03fde0e-3c58-4303-a0f0-168e96dfc7e1</guid>
+	</files>
+	<files>
+		<path>media/clothing/clothingItems/Detail_EyesLashMR.xml</path>
+		<guid>7ff94a38-7d70-49c1-95b5-170a249bc1d8</guid>
 	</files>
 	<files>
 		<path>media/clothing/clothingItems/Detail_EyesLightAmberFL.xml</path>
@@ -225,12 +153,12 @@
 		<guid>11cba707-796e-413b-bad6-68701ab0f0cd</guid>
 	</files>
 	<files>
-		<path>media/clothing/clothingItems/Detail_EyesLightBlueML.xml</path>
-		<guid>c6b63875-398c-4f14-b323-48ed045c4b41</guid>
+		<path>media/clothing/clothingItems/Detail_EyesLightAmberML.xml</path>
+		<guid>1370d8f2-37e9-433b-b907-bcc98b1ff5dc</guid>
 	</files>
 	<files>
-		<path>media/clothing/clothingItems/Detail_EyesLightBlueMR.xml</path>
-		<guid>a34a633e-b594-40ab-8a50-2a49153f8740</guid>
+		<path>media/clothing/clothingItems/Detail_EyesLightAmberMR.xml</path>
+		<guid>a04bab2a-f1e6-4b29-a4e9-fd6ba06618c5</guid>
 	</files>
 	<files>
 		<path>media/clothing/clothingItems/Detail_EyesLightBlueFL.xml</path>
@@ -241,12 +169,12 @@
 		<guid>fd19fd3a-168e-40b4-ac83-c6fcab96c57f</guid>
 	</files>
 	<files>
-		<path>media/clothing/clothingItems/Detail_EyesLightBrownML.xml</path>
-		<guid>fcfb2149-79e0-452c-b1a8-9852b518a0f3</guid>
+		<path>media/clothing/clothingItems/Detail_EyesLightBlueML.xml</path>
+		<guid>c6b63875-398c-4f14-b323-48ed045c4b41</guid>
 	</files>
 	<files>
-		<path>media/clothing/clothingItems/Detail_EyesLightBrownMR.xml</path>
-		<guid>01a1c0b9-bd8f-4495-b6fd-5765e94035a2</guid>
+		<path>media/clothing/clothingItems/Detail_EyesLightBlueMR.xml</path>
+		<guid>a34a633e-b594-40ab-8a50-2a49153f8740</guid>
 	</files>
 	<files>
 		<path>media/clothing/clothingItems/Detail_EyesLightBrownFL.xml</path>
@@ -257,12 +185,12 @@
 		<guid>944883b7-7bc2-4726-bd96-c0b2268d0ce7</guid>
 	</files>
 	<files>
-		<path>media/clothing/clothingItems/Detail_EyesLightGreenML.xml</path>
-		<guid>d3cb1d92-0748-4816-9ffe-f470789b5762</guid>
+		<path>media/clothing/clothingItems/Detail_EyesLightBrownML.xml</path>
+		<guid>fcfb2149-79e0-452c-b1a8-9852b518a0f3</guid>
 	</files>
 	<files>
-		<path>media/clothing/clothingItems/Detail_EyesLightGreenMR.xml</path>
-		<guid>d3290fb5-6382-4f5a-8404-6cffd78b4785</guid>
+		<path>media/clothing/clothingItems/Detail_EyesLightBrownMR.xml</path>
+		<guid>01a1c0b9-bd8f-4495-b6fd-5765e94035a2</guid>
 	</files>
 	<files>
 		<path>media/clothing/clothingItems/Detail_EyesLightGreenFL.xml</path>
@@ -273,12 +201,12 @@
 		<guid>7c1d37be-1a7e-48f3-9da3-fa0a6baeb72e</guid>
 	</files>
 	<files>
-		<path>media/clothing/clothingItems/Detail_EyesLightHazelML.xml</path>
-		<guid>58bd5cfd-d658-4f3e-bc30-66efe289ecac</guid>
+		<path>media/clothing/clothingItems/Detail_EyesLightGreenML.xml</path>
+		<guid>d3cb1d92-0748-4816-9ffe-f470789b5762</guid>
 	</files>
 	<files>
-		<path>media/clothing/clothingItems/Detail_EyesLightHazelMR.xml</path>
-		<guid>86bd6bf3-5579-4a48-8d7b-7387a8ff1478</guid>
+		<path>media/clothing/clothingItems/Detail_EyesLightGreenMR.xml</path>
+		<guid>d3290fb5-6382-4f5a-8404-6cffd78b4785</guid>
 	</files>
 	<files>
 		<path>media/clothing/clothingItems/Detail_EyesLightHazelFL.xml</path>
@@ -287,5 +215,13 @@
 	<files>
 		<path>media/clothing/clothingItems/Detail_EyesLightHazelFR.xml</path>
 		<guid>82f53019-b8b8-4ecd-802e-9d50d937c52d</guid>
+	</files>
+	<files>
+		<path>media/clothing/clothingItems/Detail_EyesLightHazelML.xml</path>
+		<guid>58bd5cfd-d658-4f3e-bc30-66efe289ecac</guid>
+	</files>
+	<files>
+		<path>media/clothing/clothingItems/Detail_EyesLightHazelMR.xml</path>
+		<guid>86bd6bf3-5579-4a48-8d7b-7387a8ff1478</guid>
 	</files>
 </fileGuidTable>

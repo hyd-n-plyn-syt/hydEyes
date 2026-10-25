@@ -8,6 +8,14 @@ entries.
 You need: this mod, and basic familiarity with Zomboid clothing items. All
 paths below are relative to your mod's folder.
 
+**Compat patches this mod ships** (all optional, each active only when its
+target mod is installed): GridCharacterHub's health model keeps the eyes,
+lashes and both overlay sets, ItIsOfInterestToMe's ID photos wear them and
+print their colour codes, and Spongie's Character Customisation / Tomb's
+Player Body custom faces are drawn *under* the eyes, so the eyes stay visible
+over a custom face. A third-party eye pack rides along with all of them — it
+only has to register entries.
+
 ## The eye entry (the only lua you write)
 
 One file, e.g. `42/media/lua/shared/MyEyes.lua`. The `AddEye` function
@@ -19,7 +27,7 @@ hydEyesData.AddEye({
     labelKey = "IGUI_MyEyes_Blue",       -- ... or translation key (preferred)
     male = "MyEyes.Detail_EyesMyBlueM",    -- male-fit item ...
     female = "MyEyes.Detail_EyesMyBlueF",  -- ... and female-fit item (see below)
-    textures = 1,                        -- per-skin-tone textures on the items
+    textures = 1,                        -- textures on the single-slot items
     code = "MYB",                        -- optional short code label
 })
 ```
@@ -49,20 +57,20 @@ the mod wears both:
 ```lua
 hydEyesData.AddEye({
     labelKey = "IGUI_MyEyes_Blue",
-    male = "MyEyes.Detail_EyesMyBlueM",      -- fallback / single-slot item
+    male = "MyEyes.Detail_EyesMyBlueM",      -- optional single-slot item
     female = "MyEyes.Detail_EyesMyBlueF",
     maleL = "MyEyes.Detail_EyesMyBlueML",    -- left eye, male fit
     maleR = "MyEyes.Detail_EyesMyBlueMR",    -- right eye, male fit
     femaleL = "MyEyes.Detail_EyesMyBlueFL",  -- left eye, female fit
     femaleR = "MyEyes.Detail_EyesMyBlueFR",  -- right eye, female fit
-    textures = 1,                            -- tones on the single-slot items
-    splitTextures = 5,                       -- tones on each split item
+    textures = 1,                            -- textures on the single-slot items
+    splitTextures = 5,                       -- textures on each split item
 })
 ```
 
 With the split fields present, picking the color wears the left item on
 `hydeyes:lefteye` and the right item on `hydeyes:righteye`. Without them
-the entry keeps the original single-slot behavior on `hydeyes:eyes`.
+the entry keeps the single-slot behavior on `hydeyes:eyes`.
 
 **Slot names are not configurable per pack** — the split slots are the
 mod's own `hydeyes:lefteye` / `hydeyes:righteye` locations, so a third-party
@@ -70,36 +78,111 @@ pack reuses them and its left/right items sit on the same slots as this
 pack's. Items are keyed by their own script names, so two packs never
 collide.
 
+### Layered entries (advanced)
+
+This pack's own colors are layered: the eye item carries one texture per
+eye shape and height, and a separate lash item is worn on
+`hydeyes:leftlash` / `hydeyes:rightlash` above it. An entry opts in with
+`layered = true`:
+
+```lua
+hydEyesData.AddEye({
+    labelKey = "IGUI_MyEyes_Blue",
+    maleL = "MyEyes.Detail_EyesMyBlueML",
+    maleR = "MyEyes.Detail_EyesMyBlueMR",
+    femaleL = "MyEyes.Detail_EyesMyBlueFL",
+    femaleR = "MyEyes.Detail_EyesMyBlueFR",
+    layered = true,
+    splitTextures = hydEyesData.eyeTextureCount(),  -- shapes x heights
+})
+```
+
+`splitTextures` must equal `#hydEyesData.Types * #hydEyesData.Heights`, and
+the item's `<m_BaseTextures>` must be in shape-major order, height-major
+inside each shape (`01/low`, `01/normal`, `01/high`, `02/low`, …). Lashes
+are module-wide: `hydEyesData.LashItems` holds the four lash item full types
+and their textures are ordered shape → height → length (short, long). A
+layered third-party pack that wants its own lash art must replace
+`hydEyesData.LashItems` and its lash item xmls; entries themselves do not
+carry lash items.
+
+The bloodshot overlay is module-wide in the same way:
+`hydEyesData.BloodshotItems` holds the two bloodshot item full types (one per
+side, no male/female split), worn on stacked slots above the lashes:
+`hydeyes:leftbloodshot` / `hydeyes:rightbloodshot` for layer 1, then
+`hydeyes:leftbloodshot2` / `3` / `4` / `5` / `6` and the right equivalents.
+Every layer is
+the same item, so the transparent red art builds up; the textures use the same
+shape → height order as the eyes. The overlay is worn automatically (never
+picked in creation) and copies the base texture of the eye underneath so it
+always matches the chosen shape and height, per eye. Up to six layers stack:
+
+| Stat | Layer added at |
+| --- | --- |
+| Intoxication (0–100%) | over 30%, over 50%, over 70% |
+| Sickness (0–100%) | 75%, 90% |
+| Anger (0–100%) | 75% |
+
+The thresholds live in `hydEyesData.BloodshotThresholds` and the cap in
+`hydEyesData.BloodshotLayers` (6 — the three stats together max out at exactly
+that). Only layered entries get the overlay — a
+single-slot or split entry without `layered` indexes its textures by skin
+tone, not by shape/height, so there is nothing for the overlay to match.
+
+The infected overlay works the same way and is drawn *under* the bloodshot
+layers: `hydEyesData.InfectedItems` holds the two infected item full types
+(one per side, no male/female split), worn on stacked slots above the lashes
+and below the bloodshot layers: `hydeyes:leftinfected` /
+`hydeyes:rightinfected` for layer 1, then `hydeyes:leftinfected2` / `3` / `4`
+/ `5` / `6` and the right equivalents. Every layer is the same item, so the
+transparent yellow art builds up; the textures use the same shape → height
+order as the eyes, and each layer copies the base texture of the eye
+underneath so it always matches the chosen shape and height, per eye.
+
+| Stat | Layer added at |
+| --- | --- |
+| Zombie infection (0–100%) | 10%, 21%, 41%, 61%, 81% |
+| Sickness (0–100%) | 90% (the sixth layer) |
+
+Infection below 10% wears no infected layers unless sickness is at 90% or
+worse. The thresholds live in `hydEyesData.InfectedThresholds`, the sickness
+step in `hydEyesData.InfectedSicknessLayer`, and the cap in
+`hydEyesData.InfectedLayers` (6). The same layered-entry restriction applies
+as for the bloodshot overlay.
+
 ## Textures
 
-512x512 PNGs under `media/textures/`, e.g.
-`media/textures/EyesMyPack/EyesMyBlue.png` — same eye layout as this
-pack's template so they fit the vanilla heads.
+512x512 PNGs under `media/textures/`. This pack uses:
 
-Male and female heads lay the eye area out differently, so each color ships
-as a male/female item pair (below). Start both on one shared texture; when
-per-sex art lands, point each xml at its own PNG.
+```
+media/textures/Eyes/<shape>/<height>/<shape><Color>_<L|R>.png
+media/textures/Eyes/<shape>/<height>/<shape>_Lash<Short|Long>_<L|R>.png
+media/textures/Eyes/<shape>/<height>/<shape>_Infected_<L|R>.png
+media/textures/Eyes/<shape>/<height>/<shape>_Bloodshot_<L|R>.png
+```
+
+e.g. `Eyes/01/normal/01Amber_L.png`. Shapes are `01`–`04`, heights are
+`low`, `normal`, `high`.
 
 ### Skin tones
 
 Vanilla ships five body textures, `MaleBody01`..`MaleBody05` and
 `FemaleBody01`..`FemaleBody05` — tone `01` is the palest, `05` the
-darkest. The mod reads the wearer's skin texture **name** and uses the
-number in it, so the numbering in your art should match the body number.
+darkest. A third-party pack can carry one texture per tone: add PNGs in tone
+order (01, 02, 03, 04, 05) to the xml's texture list and raise the entry's
+`textures` (or `splitTextures`) count to match. The worn texture is picked
+from the wearer's tone, clamped to what exists — so `textures = 1` (one
+texture for every tone) is a complete starting point.
 
-Items support a texture per tone without new items: add PNGs in tone order
-(01, 02, 03, 04, 05) to the xml's texture list and raise the entry's
-`textures` count to match. The worn texture is picked from the wearer's
-tone, clamped to what exists — so `textures = 1` (one texture for every
-tone) is a complete starting point, and `splitTextures` is the same count
-for the split items.
+This pack's layered art is tone-independent; its texture list is indexed by
+shape and height instead.
 
 ## Clothing item xmls
 
-One file per eye per sex in `42/media/clothing/clothingitems/`, e.g.
-`Detail_EyesMyBlueM.xml` and `Detail_EyesMyBlueF.xml`. Mint a **fresh GUID**
-per file (PowerShell: `[guid]::NewGuid()`). Never reuse a GUID from this or
-any other mod.
+One file per eye item (per side for split art) in
+`42/media/clothing/clothingitems/`, e.g. `Detail_EyesMyBlueM.xml` and
+`Detail_EyesMyBlueF.xml`. Mint a **fresh GUID** per file (PowerShell:
+`[guid]::NewGuid()`). Never reuse a GUID from this or any other mod.
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -117,10 +200,10 @@ any other mod.
 
 (`m_BaseTextures` is the texture path minus `media/textures/` and `.png`.)
 
-### Several tones on one item
+### Several textures on one item
 
 **Repeat the element — do not comma-join.** A texture list is one
-`<m_BaseTextures>` element per texture, in tone order:
+`<m_BaseTextures>` element per texture, in the order the lua will index:
 
 ```xml
     <m_BaseTextures>EyesMyPack/EyesMyBlue01</m_BaseTextures>
@@ -280,11 +363,12 @@ require=\hydEyes
 
 | Field | Meaning |
 |---|---|
-| `male` / `female` | Your M/F script item full types (module included). At least one required. |
+| `male` / `female` | Your M/F single-slot script item full types (module included). Required for a legacy entry. |
 | `maleL` / `maleR` | Optional left/right items, male fit. Worn on `hydeyes:lefteye` / `hydeyes:righteye`. |
 | `femaleL` / `femaleR` | Optional left/right items, female fit. |
-| `textures` | Per-skin-tone textures per single-slot item, tone order (01-05). Default 1. |
-| `splitTextures` | Per-skin-tone textures per split item. Default: same as `textures`. |
+| `textures` | Textures on the single-slot items, tone order (01-05). Default 1. |
+| `splitTextures` | Textures on each split item. Default: same as `textures`. |
+| `layered` | `true` for shape/height art with lash layers. `splitTextures` must be `hydEyesData.eyeTextureCount()`. |
 | `label` / `labelKey` | Dropdown text. One of them is required. |
 | `code` | Optional short code label. |
 
@@ -297,13 +381,14 @@ require=\hydEyes
   when an item has `<textureChoices>` entries and `baseTextures[baseTexture]`
   otherwise. `setTextureChoice` on an item without `<textureChoices>` is an
   out-of-range choice, and the engine re-rolls a *random* texture every
-  time it rebuilds the model — the eyes flicker between tones while the
+  time it rebuilds the model — the eyes flicker between textures while the
   mouse moves.
 - **Set the base texture even for index 0.** An item with several base
   textures and no explicit choice is rendered with a random one, so the
-  palest tone flickers if you only set the texture when the index is
-  greater than zero.
-- The tone index is the body number minus one: body `01` → index 0.
+  first texture flickers if you only set it when the index is greater than
+  zero.
+- For per-tone art the tone index is the body number minus one: body `01`
+  → index 0.
 - A trait is registered in `media/registries.lua` and defined in a script
   file with `character_trait_definition` (see the Traits section). A
   negative `Cost` is a disadvantage.
@@ -316,4 +401,10 @@ require=\hydEyes
 3. `require` set in `mod.info`.
 4. The script file's module block has its brace on its own line.
 5. Tested in creation: entry listed, hover previews, selection persists into
-   the game, and the tone matches the body you picked.
+   the game, and the chosen shape/height/lash/colour matches.
+6. Layered packs: the bloodshot layers appear while drunk, badly sick or
+   furious, match the chosen shape and height per eye, deepen as the stats
+   rise (up to six layers), and go away again once the stats recover.
+7. The infected layers appear as zombie infection climbs (10/21/41/61/81%)
+   and at 90% sickness, match the eye shape and height, and sit under the
+   bloodshot layers when both are active.

@@ -1,54 +1,63 @@
-# Vanilla Eyes (`hydEyes`)
+# Vanilla Eyes
 
-512x512 eye colors in 12 shades for the vanilla bodies, picked from a dropdown on the character creation screen.
+512px Eyes in 12 different shades for the vanilla bodies and textures, with selectable eye shape, eye height, and lash length. All art was handmade in Krita. Tried doing 256 versions, but they all looked even more unnerving than these.
 
-> **Open Disclosure.** I utilize several daemons through *opencode* in my workflow for formatting, code analysis, debugging, and testing. *I'm not concerned about your opinion on that*, so keep it to yourself.
+**Open Disclosure**. I utilize several daemons through *opencode* in my workflow for formatting, code analysis, debugging, and testing. ***I'm not concerned about your opinion on that***, so keep it to yourself.
 
-## Contents
+# Contents
 
-- **Eye colors in 12 shades** — Amber, Black, Blue, Brown, Gray, Green, Hazel, Light Amber, Light Blue, Light Brown, Light Green, Light Hazel — with separate male/female fits.
-- **Split left/right eyes** — each color ships its own left-eye and right-eye art, worn on two separate slots, so the eyes sit where they belong instead of being one combined overlay.
-- **Per-skin-tone art** — five skin tones, each with its own eye artwork (tone 01 is the palest, 05 the darkest), drawn for male and female bodies separately.
-- **Heterochromia trait** — a 1-point disadvantage that gives a character two different eye colors. With the trait picked, the creation screen swaps the single dropdown for **Left Eye Color** and **Right Eye Color**, and the two can never match, even from the randomize button.
-- **Creation dropdown** — pick your color right with the other body options. Hover previews, random button picks eyes too, and outfit/gender/skin-tone changes keep your pick.
-- **Original art kept as a fallback** — the pre-split graphics are still in the mod, and a tickbox in **Options → MODS → Vanilla Eyes** switches the whole mod back to them.
+- **Eye Colors in 12 shades** - Amber, Black, Blue, Brown, Gray, Green, Hazel, Light Amber, Light Blue, Light Brown, Light Green, and Light Hazel.
+- **Eye Shapes** - Four shapes selected from the **Eye Shape** dropdown.
+- **Eye Heights** - **Low**, **Normal** (default), and **High**, so the eye sits where you want on the face.
+- **Lash lengths** - **None**, **Short**, and **Long**. Lashes are a separate layer drawn over the eye color.
+- **Bloodshot eyes** - A separate overlay that shows up while you are drunk, badly sick, or furious, and fades again once you sober up or recover. It deepens in up to six stacked layers: intoxication over 30% adds one, over 50% a second, over 70% a third; sickness at 75% adds one and at 90% a second; anger at 75% adds one. The three can combine up to the six-layer cap. It follows the shape and height you picked, per eye.
+- **Infected eyes** - a yellow overlay that tracks zombie infection, the 0-100% value that eventually turns you. It deepens in five steps (10-20%, 21-40%, 41-60%, 61-80%, 81-100%), and sickness at 90% or worse adds a sixth layer. The infected layers are drawn *under* the bloodshot ones, so yellow and red mix into a sicklier color when both are active. It follows the shape and height you picked, per eye.
+- **Layered rendering** - Face -> Eyes -> Lashes -> Infection Overlays -> Bloodshot Overlays. Changing one layer never replaces another, and overlay layers occur as the change does.
+- **Split left and right eyes** - each color ships its own left-eye and right-eye art, worn on two separate slots.
+- **Heterochromia trait** - A 1-point disadvantage that gives a character two different eye colors. Pick the trait and the single dropdown becomes **Left Eye Color** and **Right Eye Color**; the two can never match, not even from the randomize button.
+- **Creation dropdowns** - pick your eyes in an **Eyes** section of their own, above Body. Hover previews, the randomize button rolls eyes too, and outfit/gender/skintone changes keep your picks.
 
-## Standalone, no framework
+# Standalone
 
-Eyes are ordinary clothing worn at the mod's own slots — `hydeyes:lefteye` and `hydeyes:righteye` for the split eyes, `hydeyes:eyes` for the fallback pair — nothing else in the game uses them, so glasses, makeup, and masks never
-interfere. They ride the creation desc into the game, then persist and sync like any other worn item. - No requirements, no known incompatibilities.
+Eyes, lashes and both overlays are ordinary clothing worn at the mod's own hydeyes:lefteye and hydeyes:righteye slots, plus hydeyes:leftlash and hydeyes:rightlash for the lash layers, hydeyes:leftinfected (with hydeyes:leftinfected2, 3, 4, 5 and 6, plus the right-side equivalents) for the stacked infected layers, and hydeyes:leftbloodshot (with hydeyes:leftbloodshot2, 3, 4, 5 and 6, plus the right-side equivalents) for the stacked bloodshot layers - nothing else in the game uses them since we're adding them, so no glasses conflict, no masks, no makeup kits. They ride the creation desc into the game, then persist and sync like any other worn item. No requirements, no known incompatibilities, but may need small patches to show on other mod's 3d paperdoll models since they don't utilize the default one, usually.
 
-**Dedicated servers must install this mod too** — clients need the textures.
+# Functions
 
-## Options
+All of this lives in **42/media/lua**. Eye entries themselves are registered with **hydEyesData.AddEye** (see the For Modders section).
 
-**Options → MODS → Vanilla Eyes**
+- **hydEyesData.AddEye** - registers one eye color: male/female items, optional left/right split items, texture counts, and an optional short code label. The creation dropdown lists entries in registration order.
+- **hydEyesData.itemFor** - picks the wearer's item for an entry: sex fit first, then the texture index clamped to what the item carries.
+- **hydEyesData.eyeTextureIndex** / **lashTextureIndex** - map the chosen shape, height, and lash length onto the item's base-texture list.
+- **hydEyesData.wearColors** - wears the chosen color(s), shape, height, and lash length on any character: creation preview, customisation preview, or spawned player.
+- **hydEyesData.refreshOverlays** - the polled entry point: refreshes both stacked overlay sets. **hydEyesData.refreshInfected** adds, updates or removes the yellow infected layers from zombie infection (10/21/41/61/81%) plus sickness at 90%, and **hydEyesData.refreshBloodshot** does the red layers from intoxication, sickness and anger. Both copy the shape/height texture of the eye underneath; thresholds live in **hydEyesData.InfectedThresholds** / **hydEyesData.BloodshotThresholds**, the caps in **hydEyesData.InfectedLayers** / **hydEyesData.BloodshotLayers**, and **hydEyesBloodshot.lua** polls them.
+- **Play handoff** - the preview copy is stripped before the world loads (so the engine never trips over it) and each spawned player is dressed in their recorded picks - per-player in splitscreen.
+- **hydEyesData.wearOn** - the post-spawn dress call above; also reusable by other mods.
 
-- **Use original eye graphics** — reverts to the old combined eye art (one piece for both eyes, one style for every skin tone) on the single `hydeyes:eyes` slot. The split art is the default. Toggling re-dresses your current character immediately, so you can compare the two without a restart. The original art is a single piece, so it cannot show two colors — with the fallback on, Heterochromia is off and the single Eye Color dropdown is used.
+# Requirements
 
-## For Modders — add your own eyes
+- **None**. This mod is fully standalone. Should work on most retextures unless they put the eyes in a strange spot. Now that eyes have height settings, should work on most of the odd ones, too.
+- **Dedicated servers *must* install this mod too.** Clients need the textures.
 
-This pack is a framework: register entries and they appear in the creation dropdown automatically. Full guide: [WIKI.md](WIKI.md).
+# For Modders - Add your own eyes!
 
-## Conditional compat patches
+This pack is a framework: register entries with hydEyesData.AddEye and they appear in the creation dropdown automatically. Full guide with copy-paste snippets ships with the mod as **WIKI.md**. Also available on the [Github](https://github.com/hyd-n-plyn-syt/hydEyes).
 
-No extra requirements; each activates only if its target mod is present:
+# Conditional Compatibility Patches
 
-- GridCharacterHub: the health-view model keeps your eyes instead of dropping them — both the left and the right slot.
-- ItIsOfInterestToMe: your ID card photo wears your eyes, snapshotted per card so it survives session reloads, and your own card's printed eye color matches them. A heterochromia character prints both codes, left eye first (e.g. `BLU/GRN`). Random NPC cards stay vanilla.
+No extra requirements, each activates only if its target mod is present, otherwise the patches get ignored.
 
-Multiplayer and splitscreen are **untested** — single-player is verified. The code paths are set up to work (per-player picks keyed by player index, engine-synced worn clothing), but neither has been confirmed in a live session yet.
+- [GridCharacterHub](https://steamcommunity.com/sharedfiles/filedetails/?id=3815170396) - The health-view model keeps your eyes, lashes and both overlay sets instead of dropping them, on every slot. Uses a **keepOnModel** wrapper so the build keeps those slots, plus a per-panel render hook (**reInjectGridEyes**) that re-wears them onto the model's desc after every rebuild.
+- [ItIsOfInterestToMe](https://steamcommunity.com/sharedfiles/filedetails/?id=3796373365) - Your ID card photo wears your eyes, lashes and both overlay sets (**copyLiveEyes** live plus a per-card snapshot so rebuilds survive reloads), and your own card prints the matching eye color in that mod's 3-letter codes (**wornEyeCodes**): Amber AMB, Black BLA, Blue BLU, Brown BRO, Gray GRY, Green GRN, Hazel HAZ, with Light shades printing as their base color. Heterochromia characters print both codes, left eye first (BLU/GRN). Random NPC cards stay vanilla for now. Might change once I give zombies eyes in a future update.
+- [Spongie's Character Customisation](https://steamcommunity.com/sharedfiles/filedetails/?id=3414634809) and [Tomb's Player Body](https://steamcommunity.com/sharedfiles/filedetails/?id=3429790870) - Their custom faces are drawn over the eye overlay, so the eyes and lashes are put back on top of them and show over custom faces too.
 
-## Roadmap / TODO
+# Roadmap
 
-- **Blinking** — closed-eye graphics are drawn for every skin tone and gender; the blink timing and swap are not wired up yet.
-- **Bloodshot eyes for the Stoned moodlet** — alternate bloodshot texture per eye color, swapped in while the moodlet is active.
-- **Multiplayer / splitscreen confirmation** — verify picks and rendering per player. Single-player only so far.
+- **Multiplayer / splitscreen confirmation -** Verify type/height/color rendering per player are accurate. Single-player only so far. (*Please let me know if you test it out yourself. Especially the bloodshot/infection layering!*)
+- **Blinking -** Closed-eye graphics are not part of the current art set, but some are in the Krita template for the 01 style; the blink timing and swap are not wired up, but the functions are already mapped out. Just need to finish the art. Likely hidden behind a setting, or a multitude of them, so blink speeds and the things that alter them can be controlled. Planned to tie into tiredness, and probably several other moodlets.
+- **Zombie eyes -** Dead-eyed colored versions fitted to the zombie skins, chosen at random for them. The same amount of variation is wanted, so zombies come back with the appropriate eyes after death. Not sure about blinking yet.
+- **NPC Support -** Will come after the zombies since, from what I understand from poking around, most NPC mods just spawn them as a type of zombie anyway. Have to figure them out first.
+- **Dynamic Injuries -** Might add in overlays or new graphics for missing/blind/pinkeye/etc. after a deeper look at the injury system.
 
-## Credits
+# Credits
 
-- hydnplynsyt — 512x512 eye color overlays and standalone implementation.
-
----
-
-Mod ID: `hydEyes`
+- **hydnplynsyt -** 512px eye color overlays and implementation.

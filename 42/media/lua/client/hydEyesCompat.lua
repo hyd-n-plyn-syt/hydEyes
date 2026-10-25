@@ -4,23 +4,31 @@
 --
 -- Covered:
 --   * GridCharacterHub health model: its buildDesc copies the player's
---     HumanVisual but only keeps underwear/bandage/wound worn items, so eye
---     overlays are dropped. Fixed by also keeping the eye slots.
+--     HumanVisual but only keeps underwear/bandage/wound worn items, so the
+--     eye, lash and overlay slots are dropped. The patch keeps those slots
+--     as well.
 --   * ItIsOfInterestToMe ID card photo: its desc is built from skin/hair/
---     beard only (worn items are cleared), so the eyes are re-worn onto it.
---     Fixed by copying the player's eye items live plus a snapshot
---     (fullType + tint + base texture) in the item's modData so rebuilds
---     restore it. Random NPC cards have no source look and stay vanilla.
+--     beard only (worn items are cleared), so the eyes and lashes are
+--     re-worn onto it. The patch copies the player's eye/lash items live
+--     plus a snapshot (fullType + tint + base texture) in the item's modData
+--     so rebuilds restore them. Random NPC cards have no source look and
+--     stay vanilla.
 --   * ItIsOfInterestToMe printed eye color: the player's OWN card (tagged
 --     iioitmIsOwnCard by that mod) prints their worn eye's registry code,
 --     left eye first — a heterochromia character prints both ("BLU/GRN").
 --     Frozen once written.
+--   * Spongie's Character Customisation and Tomb's Player Body: their face
+--     art is worn on SPNCC:Face and is drawn over our eye overlay. The
+--     appearance screen re-applies our layers after they refresh the preview.
 --
 -- Left and right eyes are two separate items on two body locations
--- (hydeyes:lefteye / hydeyes:righteye), so every patch below resolves the
--- slot per item instead of assuming one eye slot. Whatever the player is
--- wearing is copied: the split graphics by default, the original combined
--- art when the Mod Options fallback is on.
+-- (hydeyes:lefteye / hydeyes:righteye), the lashes have their own pair
+-- (hydeyes:leftlash / hydeyes:rightlash), and each runtime overlay is the
+-- same item stacked on six slots per side (hydeyes:leftinfected,
+-- hydeyes:leftinfected2..6 and hydeyes:leftbloodshot,
+-- hydeyes:leftbloodshot2..6, plus the right equivalents). Every patch below
+-- therefore uses the worn entry's own body location instead of resolving the
+-- slot from the item type, which would collapse all six layers onto one slot.
 
 require("hydEyesData")
 
@@ -41,7 +49,7 @@ local function eachEyeItem(player, fn)
         local okItem, wi = pcall(function() return worn:get(i) end)
         local item = okItem and wi and wi:getItem()
         if isEyeItem(item) then
-            fn(item)
+            fn(item, wi)
         end
     end
 end
@@ -53,10 +61,34 @@ local function locationFor(fullType)
     return hydEyesLocation and hydEyesLocation[hydEyesData.locationFor(fullType)] or nil
 end
 
+-- The body location of one worn entry. The entry's own location is used
+-- because the six stacked overlay layers all hold the same item type, and
+-- locationFor() would send every one of them to the first layer's slot.
+local function wornLocation(wi, fullType)
+    if wi then
+        local okLoc, loc = pcall(function() return wi:getLocation() end)
+        if okLoc and loc then return loc end
+    end
+    return locationFor(fullType)
+end
+
+-- Body location id of one worn entry, for the snapshot table.
+local function wornLocationId(wi, fullType)
+    if wi then
+        local okLoc, loc = pcall(function() return wi:getLocation() end)
+        if okLoc and loc then
+            local okId, id = pcall(function() return loc:getId() end)
+            if okId and type(id) == "string" then return id end
+        end
+    end
+    return hydEyesData and hydEyesData.locationFor and hydEyesData.locationFor(fullType)
+        or "hydeyes:eyes"
+end
+
 local function copyLiveEyes(player, desc)
     if not (player and desc) then return end
-    eachEyeItem(player, function(item)
-        local loc = locationFor(item:getFullType())
+    eachEyeItem(player, function(item, wi)
+        local loc = wornLocation(wi, item:getFullType())
         if loc then pcall(function() desc:setWornItem(loc, item) end) end
     end)
 end
@@ -72,8 +104,12 @@ end
 
 local function snapshotPlayer(player)
     local list = {}
-    eachEyeItem(player, function(item)
-        local entry = { type = item:getFullType() }
+    eachEyeItem(player, function(item, wi)
+        local fullType = item:getFullType()
+        local entry = {
+            type = fullType,
+            loc = wornLocationId(wi, fullType),
+        }
         local okV, v = pcall(function() return item:getVisual() end)
         if okV and v then
             local okT, tint = pcall(function() return v:getTint() end)
@@ -94,7 +130,10 @@ local function applySnapshot(desc, snap)
         if type(e) == "table" and type(e.type) == "string" then
             local ok, item = pcall(instanceItem, e.type)
             if ok and item then
-                local loc = locationFor(e.type)
+                -- A snapshot with no location falls back to the type's first
+                -- slot.
+                local loc = type(e.loc) == "string" and hydEyesLocation[e.loc] or nil
+                if not loc then loc = locationFor(e.type) end
                 if loc then
                     local v = item:getVisual()
                     if v then
@@ -237,8 +276,8 @@ local function reInjectGridEyes(panel)
     end
     if not patient then return end
     local injected = false
-    eachEyeItem(patient, function(item)
-        local loc = locationFor(item:getFullType())
+    eachEyeItem(patient, function(item, wi)
+        local loc = wornLocation(wi, item:getFullType())
         if loc and pcall(function() desc:setWornItem(loc, item) end) then
             injected = true
         end
@@ -286,12 +325,68 @@ local function hookGridPanel()
     end
 end
 
+-- Spongie's Character Customisation screen has its own preview survivor and
+-- wears their customisation items on it, so our eyes are not part of that
+-- preview. Their panel pushes the desc to the main avatar first (with every
+-- customisation item on it), then strips the desc down to just the face for
+-- the small portraits. So the eyes go on before each of those pushes.
+local function applyEyesToPreview(desc)
+    if not desc then return end
+    local left = hydEyesChoices and hydEyesChoices[0] or hydEyesChoice or 1
+    local right = hydEyesRightChoices and hydEyesRightChoices[0]
+        or hydEyesRightChoice or left
+    local typ = hydEyesTypeChoices and hydEyesTypeChoices[0]
+        or hydEyesTypeChoice or (hydEyesData.DefaultTypeIndex or 1)
+    local height = hydEyesHeightChoices and hydEyesHeightChoices[0]
+        or hydEyesHeightChoice or (hydEyesData.DefaultHeightIndex or 1)
+    local lash = hydEyesLashChoices and hydEyesLashChoices[0]
+        or hydEyesLashChoice
+    if hydEyesData and hydEyesData.wearColors then
+        -- The preview survivor carries no traits, so the right eye is applied
+        -- as picked (heterochromia included).
+        pcall(function()
+            hydEyesData.wearColors(desc, left, right, true, typ, height, lash)
+        end)
+    end
+end
+
+local function hookCustomisationPreview()
+    if type(CharacterCustomisationPanel) == "table" then
+        for _, name in ipairs({ "setAvatarDescs", "applyVisual" }) do
+            local original = CharacterCustomisationPanel[name]
+            if type(original) == "function"
+                and not CharacterCustomisationPanel["hydEyesWrapped_" .. name] then
+                CharacterCustomisationPanel["hydEyesWrapped_" .. name] = true
+                CharacterCustomisationPanel[name] = function(self, ...)
+                    -- Before the original: the push it does must include the
+                    -- eyes, and the desc it leaves behind (face only) must
+                    -- have them on for the small portraits.
+                    pcall(function() applyEyesToPreview(self.previewDesc) end)
+                    return original(self, ...)
+                end
+            end
+        end
+    end
+    if type(BodyDetailAvatar) == "table" then
+        local original = BodyDetailAvatar.applyVisual
+        if type(original) == "function"
+            and not BodyDetailAvatar.hydEyesPreviewHooked then
+            BodyDetailAvatar.hydEyesPreviewHooked = true
+            BodyDetailAvatar.applyVisual = function(self, selectedFace, ...)
+                pcall(function() applyEyesToPreview(self.desc) end)
+                return original(self, selectedFace, ...)
+            end
+        end
+    end
+end
+
 local function TryInstall()
     hookGrid()
     hookIDCards()
     hookIDCardDetails()
     hookModelDesc()
     hookGridPanel()
+    hookCustomisationPreview()
 end
 
 TryInstall()

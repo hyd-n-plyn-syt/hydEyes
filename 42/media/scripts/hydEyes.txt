@@ -4,246 +4,6 @@ module hydEyes
     {
         Base
     }
-    item Detail_EyesAmberM
-    {
-        DisplayCategory = MaleBody,
-        ItemType = base:clothing,
-        ClothingItem = Detail_EyesAmberM,
-        BodyLocation = hydeyes:eyes,
-        Tags = hydEyes:Eyes,
-        hidden = true,
-        Weight = 0,
-    }
-    item Detail_EyesAmberF
-    {
-        DisplayCategory = MaleBody,
-        ItemType = base:clothing,
-        ClothingItem = Detail_EyesAmberF,
-        BodyLocation = hydeyes:eyes,
-        Tags = hydEyes:Eyes,
-        hidden = true,
-        Weight = 0,
-    }
-    item Detail_EyesBlackM
-    {
-        DisplayCategory = MaleBody,
-        ItemType = base:clothing,
-        ClothingItem = Detail_EyesBlackM,
-        BodyLocation = hydeyes:eyes,
-        Tags = hydEyes:Eyes,
-        hidden = true,
-        Weight = 0,
-    }
-    item Detail_EyesBlackF
-    {
-        DisplayCategory = MaleBody,
-        ItemType = base:clothing,
-        ClothingItem = Detail_EyesBlackF,
-        BodyLocation = hydeyes:eyes,
-        Tags = hydEyes:Eyes,
-        hidden = true,
-        Weight = 0,
-    }
-    item Detail_EyesBlueM
-    {
-        DisplayCategory = MaleBody,
-        ItemType = base:clothing,
-        ClothingItem = Detail_EyesBlueM,
-        BodyLocation = hydeyes:eyes,
-        Tags = hydEyes:Eyes,
-        hidden = true,
-        Weight = 0,
-    }
-    item Detail_EyesBlueF
-    {
-        DisplayCategory = MaleBody,
-        ItemType = base:clothing,
-        ClothingItem = Detail_EyesBlueF,
-        BodyLocation = hydeyes:eyes,
-        Tags = hydEyes:Eyes,
-        hidden = true,
-        Weight = 0,
-    }
-    item Detail_EyesBrownM
-    {
-        DisplayCategory = MaleBody,
-        ItemType = base:clothing,
-        ClothingItem = Detail_EyesBrownM,
-        BodyLocation = hydeyes:eyes,
-        Tags = hydEyes:Eyes,
-        hidden = true,
-        Weight = 0,
-    }
-    item Detail_EyesBrownF
-    {
-        DisplayCategory = MaleBody,
-        ItemType = base:clothing,
-        ClothingItem = Detail_EyesBrownF,
-        BodyLocation = hydeyes:eyes,
-        Tags = hydEyes:Eyes,
-        hidden = true,
-        Weight = 0,
-    }
-    item Detail_EyesGrayM
-    {
-        DisplayCategory = MaleBody,
-        ItemType = base:clothing,
-        ClothingItem = Detail_EyesGrayM,
-        BodyLocation = hydeyes:eyes,
-        Tags = hydEyes:Eyes,
-        hidden = true,
-        Weight = 0,
-    }
-    item Detail_EyesGrayF
-    {
-        DisplayCategory = MaleBody,
-        ItemType = base:clothing,
-        ClothingItem = Detail_EyesGrayF,
-        BodyLocation = hydeyes:eyes,
-        Tags = hydEyes:Eyes,
-        hidden = true,
-        Weight = 0,
-    }
-    item Detail_EyesGreenM
-    {
-        DisplayCategory = MaleBody,
-        ItemType = base:clothing,
-        ClothingItem = Detail_EyesGreenM,
-        BodyLocation = hydeyes:eyes,
-        Tags = hydEyes:Eyes,
-        hidden = true,
-        Weight = 0,
-    }
-    item Detail_EyesGreenF
-    {
-        DisplayCategory = MaleBody,
-        ItemType = base:clothing,
-        ClothingItem = Detail_EyesGreenF,
-        BodyLocation = hydeyes:eyes,
-        Tags = hydEyes:Eyes,
-        hidden = true,
-        Weight = 0,
-    }
-    item Detail_EyesHazelM
-    {
-        DisplayCategory = MaleBody,
-        ItemType = base:clothing,
-        ClothingItem = Detail_EyesHazelM,
-        BodyLocation = hydeyes:eyes,
-        Tags = hydEyes:Eyes,
-        hidden = true,
-        Weight = 0,
-    }
-    item Detail_EyesHazelF
-    {
-        DisplayCategory = MaleBody,
-        ItemType = base:clothing,
-        ClothingItem = Detail_EyesHazelF,
-        BodyLocation = hydeyes:eyes,
-        Tags = hydEyes:Eyes,
-        hidden = true,
-        Weight = 0,
-    }
-    item Detail_EyesLightAmberM
-    {
-        DisplayCategory = MaleBody,
-        ItemType = base:clothing,
-        ClothingItem = Detail_EyesLightAmberM,
-        BodyLocation = hydeyes:eyes,
-        Tags = hydEyes:Eyes,
-        hidden = true,
-        Weight = 0,
-    }
-    item Detail_EyesLightAmberF
-    {
-        DisplayCategory = MaleBody,
-        ItemType = base:clothing,
-        ClothingItem = Detail_EyesLightAmberF,
-        BodyLocation = hydeyes:eyes,
-        Tags = hydEyes:Eyes,
-        hidden = true,
-        Weight = 0,
-    }
-    item Detail_EyesLightBlueM
-    {
-        DisplayCategory = MaleBody,
-        ItemType = base:clothing,
-        ClothingItem = Detail_EyesLightBlueM,
-        BodyLocation = hydeyes:eyes,
-        Tags = hydEyes:Eyes,
-        hidden = true,
-        Weight = 0,
-    }
-    item Detail_EyesLightBlueF
-    {
-        DisplayCategory = MaleBody,
-        ItemType = base:clothing,
-        ClothingItem = Detail_EyesLightBlueF,
-        BodyLocation = hydeyes:eyes,
-        Tags = hydEyes:Eyes,
-        hidden = true,
-        Weight = 0,
-    }
-    item Detail_EyesLightBrownM
-    {
-        DisplayCategory = MaleBody,
-        ItemType = base:clothing,
-        ClothingItem = Detail_EyesLightBrownM,
-        BodyLocation = hydeyes:eyes,
-        Tags = hydEyes:Eyes,
-        hidden = true,
-        Weight = 0,
-    }
-    item Detail_EyesLightBrownF
-    {
-        DisplayCategory = MaleBody,
-        ItemType = base:clothing,
-        ClothingItem = Detail_EyesLightBrownF,
-        BodyLocation = hydeyes:eyes,
-        Tags = hydEyes:Eyes,
-        hidden = true,
-        Weight = 0,
-    }
-    item Detail_EyesLightGreenM
-    {
-        DisplayCategory = MaleBody,
-        ItemType = base:clothing,
-        ClothingItem = Detail_EyesLightGreenM,
-        BodyLocation = hydeyes:eyes,
-        Tags = hydEyes:Eyes,
-        hidden = true,
-        Weight = 0,
-    }
-    item Detail_EyesLightGreenF
-    {
-        DisplayCategory = MaleBody,
-        ItemType = base:clothing,
-        ClothingItem = Detail_EyesLightGreenF,
-        BodyLocation = hydeyes:eyes,
-        Tags = hydEyes:Eyes,
-        hidden = true,
-        Weight = 0,
-    }
-    item Detail_EyesLightHazelM
-    {
-        DisplayCategory = MaleBody,
-        ItemType = base:clothing,
-        ClothingItem = Detail_EyesLightHazelM,
-        BodyLocation = hydeyes:eyes,
-        Tags = hydEyes:Eyes,
-        hidden = true,
-        Weight = 0,
-    }
-    item Detail_EyesLightHazelF
-    {
-        DisplayCategory = MaleBody,
-        ItemType = base:clothing,
-        ClothingItem = Detail_EyesLightHazelF,
-        BodyLocation = hydeyes:eyes,
-        Tags = hydEyes:Eyes,
-        hidden = true,
-        Weight = 0,
-    }
     item Detail_EyesAmberML
     {
         DisplayCategory = MaleBody,
@@ -720,6 +480,86 @@ module hydEyes
         ItemType = base:clothing,
         ClothingItem = Detail_EyesLightHazelFR,
         BodyLocation = hydeyes:righteye,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesLashML
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesLashML,
+        BodyLocation = hydeyes:leftlash,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesLashMR
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesLashMR,
+        BodyLocation = hydeyes:rightlash,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesLashFL
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesLashFL,
+        BodyLocation = hydeyes:leftlash,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesLashFR
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesLashFR,
+        BodyLocation = hydeyes:rightlash,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesBloodshotL
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesBloodshotL,
+        BodyLocation = hydeyes:leftbloodshot,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesBloodshotR
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesBloodshotR,
+        BodyLocation = hydeyes:rightbloodshot,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesInfectedL
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesInfectedL,
+        BodyLocation = hydeyes:leftinfected,
+        Tags = hydEyes:Eyes,
+        hidden = true,
+        Weight = 0,
+    }
+    item Detail_EyesInfectedR
+    {
+        DisplayCategory = MaleBody,
+        ItemType = base:clothing,
+        ClothingItem = Detail_EyesInfectedR,
+        BodyLocation = hydeyes:rightinfected,
         Tags = hydEyes:Eyes,
         hidden = true,
         Weight = 0,

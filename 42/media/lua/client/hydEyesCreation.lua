@@ -1,15 +1,19 @@
--- Eye color dropdown on the vanilla character creation screen, slid in
--- under the body divider:
+-- Eye shape, height, lash length and colour dropdowns in a section of their
+-- own on the vanilla character creation screen, titled "Eyes" and sitting
+-- above the Body section:
 --
---   * picking a color wears that eye item on the preview desc immediately
---     (hovering previews);
+--   * drawing is layered: face -> eyes -> lashes -> infected layers ->
+--     bloodshot layers, each on its own body slot (the overlays are
+--     runtime-driven, not picked here);
+--   * picking a value wears it on the preview desc immediately (hovering
+--     previews);
 --   * the preview desc never spawns (stripped at Play), so each player's
---     recorded pick is worn post-spawn instead — per-player picks keyed by
+--     recorded picks are worn post-spawn instead — per-player picks keyed by
 --     player index, so splitscreen characters don't clobber each other;
 --   * outfit randomize / gender change / the dice clear worn items, so the
---     current pick is re-applied after each of those;
---   * with the Heterochromia trait the single dropdown is replaced by two
---     (left and right) and the two sides can never share a color.
+--     current picks are re-applied after each of those;
+--   * with the Heterochromia trait the single colour dropdown is replaced by
+--     two (left and right) and the two sides can never share a colour.
 --
 -- Third-party entries registered with hydEyesData.AddEye appear automatically
 -- (options rebuild every time the creation screen is shown).
@@ -18,10 +22,17 @@ require("hydEyesData")
 
 hydEyesChoice = hydEyesChoice or 1
 hydEyesRightChoice = hydEyesRightChoice or 1
+hydEyesTypeChoice = hydEyesTypeChoice or (hydEyesData.DefaultTypeIndex or 1)
+hydEyesHeightChoice = hydEyesHeightChoice or (hydEyesData.DefaultHeightIndex or 1)
+-- No load-time lash default: it depends on the character's sex, so it is
+-- resolved from the preview desc whenever no pick has been recorded.
 -- Per-player picks (splitscreen creates one character per player through
 -- panels sharing one preview desc). Single-player only ever uses index 0.
 hydEyesChoices = hydEyesChoices or {}
 hydEyesRightChoices = hydEyesRightChoices or {}
+hydEyesTypeChoices = hydEyesTypeChoices or {}
+hydEyesHeightChoices = hydEyesHeightChoices or {}
+hydEyesLashChoices = hydEyesLashChoices or {}
 
 -- Which player the open creation screen is building (0 in single-player).
 local function activePlayerIndex()
@@ -32,8 +43,16 @@ local function activePlayerIndex()
     return 0
 end
 
+local function clampChoice(value, count)
+    if type(count) ~= "number" or count < 1 then return 1 end
+    value = tonumber(value) or 1
+    if value < 1 then value = 1 end
+    if value > count then value = count end
+    return math.floor(value)
+end
+
 -- This panel's pick: its own field, else its player's recorded pick, else
--- the default. Keeps splitscreen panels from clobber each other.
+-- the default. Keeps splitscreen panels from clobbering each other.
 local function panelChoiceIndex(creationMain)
     if creationMain and type(creationMain.hydEyesChoiceIndex) == "number" then
         return creationMain.hydEyesChoiceIndex
@@ -52,6 +71,47 @@ local function panelRightChoiceIndex(creationMain)
     return hydEyesRightChoice or 1
 end
 
+local function panelTypeIndex(creationMain)
+    if creationMain and type(creationMain.hydEyesTypeIndex) == "number" then
+        return creationMain.hydEyesTypeIndex
+    end
+    local recorded = hydEyesTypeChoices[activePlayerIndex()]
+    if type(recorded) == "number" then return recorded end
+    return hydEyesTypeChoice or hydEyesData.DefaultTypeIndex or 1
+end
+
+local function panelHeightIndex(creationMain)
+    if creationMain and type(creationMain.hydEyesHeightIndex) == "number" then
+        return creationMain.hydEyesHeightIndex
+    end
+    local recorded = hydEyesHeightChoices[activePlayerIndex()]
+    if type(recorded) == "number" then return recorded end
+    return hydEyesHeightChoice or hydEyesData.DefaultHeightIndex or 1
+end
+
+-- Sex of the character being previewed, for the lash default.
+local function previewIsFemale()
+    local desc = MainScreen.instance and MainScreen.instance.desc
+    if not desc then return false end
+    local ok, isFemale = pcall(function() return desc:isFemale() end)
+    return ok and isFemale
+end
+
+local function panelLashIndex(creationMain)
+    if creationMain and type(creationMain.hydEyesLashIndex) == "number" then
+        return creationMain.hydEyesLashIndex
+    end
+    local recorded = hydEyesLashChoices[activePlayerIndex()]
+    if type(recorded) == "number" then return recorded end
+    return hydEyesLashChoice
+end
+
+-- What the lash dropdown shows: the pick, else the sex-based default.
+local function lashDisplayIndex(creationMain)
+    return panelLashIndex(creationMain)
+        or hydEyesData.defaultLashIndex(previewIsFemale())
+end
+
 local function setChoice(creationMain, index)
     hydEyesChoice = index
     if creationMain then creationMain.hydEyesChoiceIndex = index end
@@ -64,9 +124,31 @@ local function setRightChoice(creationMain, index)
     hydEyesRightChoices[activePlayerIndex()] = index
 end
 
+local function setTypeChoice(creationMain, index)
+    hydEyesTypeChoice = index
+    if creationMain then creationMain.hydEyesTypeIndex = index end
+    hydEyesTypeChoices[activePlayerIndex()] = index
+end
+
+local function setHeightChoice(creationMain, index)
+    hydEyesHeightChoice = index
+    if creationMain then creationMain.hydEyesHeightIndex = index end
+    hydEyesHeightChoices[activePlayerIndex()] = index
+end
+
+local function setLashChoice(creationMain, index)
+    hydEyesLashChoice = index
+    if creationMain then creationMain.hydEyesLashIndex = index end
+    hydEyesLashChoices[activePlayerIndex()] = index
+end
+
 local BUTTON_HGT = getTextManager():getFontHeight(UIFont.Small) + 6
+local FONT_HGT_MEDIUM = getTextManager():getFontHeight(UIFont.Medium)
 local UI_SPACING = 10
 local ROW_GAP = BUTTON_HGT + UI_SPACING
+-- Height a vanilla section header takes before its first row (label plus the
+-- gap the Body/Hair sections use).
+local SECTION_HGT = FONT_HGT_MEDIUM + 15
 
 -- The trait is picked on the traits screen, which comes before this one.
 -- The selection is tracked from the traits screen's add/remove hooks: the
@@ -123,13 +205,10 @@ local function hasHeterochromiaTrait()
     return false
 end
 
--- Two dropdowns only with the trait, and only while the split graphics are
--- in use: the original combined art is one piece for both eyes, so it
--- cannot show two colors.
+-- Two colour dropdowns only with the trait: the left and right eyes are
+-- separate items, so they can show two colours.
 local function heterochromiaMode()
-    if not hasHeterochromiaTrait() then return false end
-    if hydEyesSettings and hydEyesSettings.fallback then return false end
-    return true
+    return hasHeterochromiaTrait()
 end
 
 local function entryLabel(entry)
@@ -139,103 +218,22 @@ local function entryLabel(entry)
         if s and s ~= entry.labelKey then text = s end
     end
     text = text or entry.label or entry.item
-    -- Dropdown shows short color names ("Blue"); the row label says Eyes.
+    -- Dropdown shows short colour names ("Blue"); the row label says Eyes.
     return string.gsub(text, "^Eyes ", "")
 end
 
-local function currentEntry(creationMain)
-    local list = hydEyesData.Eyes
-    if #list == 0 then return nil end
-    local i = math.max(1, math.min(panelChoiceIndex(creationMain), #list))
-    return list[i], i
+local function optionLabel(option)
+    if option.labelKey then
+        local s = getText(option.labelKey)
+        if s and s ~= option.labelKey then return s end
+    end
+    return option.label or option.key
 end
 
 -- An index that is never the same as the other side's pick.
 local function differentIndex(avoid, count)
     if count <= 1 then return 1 end
     return (avoid % count) + 1
-end
-
-local function descSkin(desc)
-    local ok, v = pcall(function() return desc:getHumanVisual() end)
-    if not ok or not v then return 0 end
-    return hydEyesData.skinTone(v)
-end
-
-local function eyeLocation()
-    return hydEyesLocation and hydEyesLocation["hydeyes:eyes"] or nil
-end
-
-local function eyeLoc(locId)
-    return hydEyesLocation and hydEyesLocation[locId] or nil
-end
-
-local function clearSlot(desc, locId)
-    local loc = eyeLoc(locId)
-    if loc then desc:setWornItem(loc, nil) end
-end
-
-local function wearSide(desc, locId, entry, isFemale, skin, side)
-    local loc = eyeLoc(locId)
-    if loc == nil then return end
-    if not entry then return end
-    local fullType, tone = hydEyesData.itemFor(entry, isFemale, skin, side)
-    if not fullType then return end
-    local ok, item = pcall(instanceItem, fullType)
-    if ok and item then
-        local v = item:getVisual()
-        -- Base texture only: these items carry their skin tones in
-        -- <m_BaseTextures>. setTextureChoice would index the (absent)
-        -- <textureChoices> list and the engine would re-roll a random
-        -- texture on every avatar rebuild.
-        -- Always set it, index 0 included: with several base textures the
-        -- engine otherwise picks one at random.
-        if v then
-            pcall(function() v:setBaseTexture(tone) end)
-        end
-        desc:setWornItem(loc, item)
-    end
-end
-
--- Wears the chosen pair: one item per side in split mode, the single
--- fallback item otherwise (the original art is one piece for both eyes, so
--- the fallback can only show one color). The overrides are for hover
--- previews: they show a color without committing the pick.
-local function applyPicks(creationMain, leftOverride, rightOverride)
-    local desc = MainScreen.instance and MainScreen.instance.desc
-    if not desc then return end
-    local isFemale = desc:isFemale()
-    local skin = descSkin(desc)
-    local list = hydEyesData.Eyes
-    if #list == 0 then return end
-    local leftIndex = math.max(1, math.min(leftOverride or panelChoiceIndex(creationMain), #list))
-    local leftEntry = list[leftIndex]
-    if not leftEntry then return end
-    local rightEntry = leftEntry
-    if heterochromiaMode() then
-        local rightIndex = math.max(1, math.min(rightOverride or panelRightChoiceIndex(creationMain), #list))
-        rightEntry = list[rightIndex] or leftEntry
-    end
-    if hydEyesData.useSplit(leftEntry, isFemale) then
-        clearSlot(desc, "hydeyes:eyes")
-        wearSide(desc, "hydeyes:lefteye", leftEntry, isFemale, skin, "L")
-        wearSide(desc, "hydeyes:righteye", rightEntry, isFemale, skin, "R")
-        return
-    end
-    clearSlot(desc, "hydeyes:lefteye")
-    clearSlot(desc, "hydeyes:righteye")
-    local loc = eyeLocation()
-    if loc == nil then return end
-    local fullType, tone = hydEyesData.itemFor(leftEntry, isFemale, skin)
-    if not fullType then return end
-    local ok, item = pcall(instanceItem, fullType)
-    if ok and item then
-        local v = item:getVisual()
-        if v then
-            pcall(function() v:setBaseTexture(tone) end)
-        end
-        desc:setWornItem(loc, item)
-    end
 end
 
 local function refreshAvatar(creationMain)
@@ -245,23 +243,46 @@ local function refreshAvatar(creationMain)
     end
 end
 
+-- Wears the current picks (or the supplied hover overrides) through the
+-- shared data layer, so the creation preview and the spawned player follow
+-- exactly the same layering rules.
+local function applyPicks(creationMain, overrides)
+    local desc = MainScreen.instance and MainScreen.instance.desc
+    if not desc then return end
+    local list = hydEyesData.Eyes
+    if #list == 0 then return end
+    overrides = overrides or {}
+    local leftIndex = clampChoice(overrides.left or panelChoiceIndex(creationMain), #list)
+    local rightIndex = clampChoice(overrides.right or panelRightChoiceIndex(creationMain), #list)
+    local typeIndex = clampChoice(overrides.type or panelTypeIndex(creationMain), #hydEyesData.Types)
+    local heightIndex = clampChoice(overrides.height or panelHeightIndex(creationMain), #hydEyesData.Heights)
+    local lashIndex = overrides.lash or panelLashIndex(creationMain)
+    if lashIndex then
+        lashIndex = clampChoice(lashIndex, #hydEyesData.LashLengths)
+    end
+    hydEyesData.wearColors(desc, leftIndex, rightIndex, heterochromiaMode(),
+        typeIndex, heightIndex, lashIndex)
+end
+
 local function applyCurrent(creationMain)
     applyPicks(creationMain)
     refreshAvatar(creationMain)
 end
 
--- Hovering previews a color on the avatar without committing the pick.
-local function previewEntry(creationMain, index, isRight)
-    if isRight then
-        applyPicks(creationMain, nil, index)
-    else
-        applyPicks(creationMain, index, nil)
-    end
+local function overrideFor(key, value)
+    local overrides = {}
+    overrides[key] = value
+    return overrides
+end
+
+-- Hovering previews a value on the avatar without committing the pick.
+local function previewPick(creationMain, key, index)
+    applyPicks(creationMain, overrideFor(key, index))
     refreshAvatar(creationMain)
 end
 
--- Keep the two sides on different colors: picking the color the other side
--- already wears moves that side to the next color instead.
+-- Keep the two sides on different colours: picking the colour the other side
+-- already wears moves that side to the next colour instead.
 local function enforceDifferent(creationMain, changedIsRight)
     local count = #hydEyesData.Eyes
     if count < 2 then return end
@@ -296,18 +317,60 @@ local function hydEyesOnSelectRight(creationMain, combo)
     applyCurrent(creationMain)
 end
 
+local function hydEyesOnShape(creationMain, combo)
+    setTypeChoice(creationMain, combo.selected)
+    applyCurrent(creationMain)
+end
+
+local function hydEyesOnHeight(creationMain, combo)
+    setHeightChoice(creationMain, combo.selected)
+    applyCurrent(creationMain)
+end
+
+local function hydEyesOnLash(creationMain, combo)
+    setLashChoice(creationMain, combo.selected)
+    applyCurrent(creationMain)
+end
+
 local function fillCombo(combo, index)
     if type(combo.clear) == "function" then combo:clear() end
     for _, entry in ipairs(hydEyesData.Eyes) do
         combo:addOption(entryLabel(entry))
     end
-    if index == nil then
-        local _, i = currentEntry()
-        index = i
-    end
     -- NB: select() takes visible TEXT, not an index; assign the field
     -- directly exactly like the popup does on click.
-    if index then combo.selected = index end
+    combo.selected = clampChoice(index, #hydEyesData.Eyes)
+end
+
+local function fillTypeCombo(combo, index)
+    if type(combo.clear) == "function" then combo:clear() end
+    for _, typ in ipairs(hydEyesData.Types) do
+        combo:addOption(tostring(typ))
+    end
+    combo.selected = clampChoice(index, #hydEyesData.Types)
+end
+
+local function fillOptionCombo(combo, options, index)
+    if type(combo.clear) == "function" then combo:clear() end
+    for _, option in ipairs(options) do
+        combo:addOption(optionLabel(option))
+    end
+    combo.selected = clampChoice(index, #options)
+end
+
+-- Lua UI elements carry their class name in .Type and their parent class in
+-- .SuperType (ISBaseObject:derive). NB: the global instanceof() only knows
+-- Java classes and returns false for these, so walk the chain instead.
+local function elementIsA(el, typeName)
+    if type(el) ~= "table" then return false end
+    local t = el.Type
+    local guard = 0
+    while type(t) == "table" and guard < 20 do
+        if t.Type == typeName then return true end
+        t = t.SuperType
+        guard = guard + 1
+    end
+    return el.Type == typeName
 end
 
 local function shiftBelow(panel, insertY, dy)
@@ -316,10 +379,7 @@ local function shiftBelow(panel, insertY, dy)
         if not el or seen[el] then return end
         seen[el] = true
         -- Never move scrollbars or nested viewports, only content rows.
-        local okS, isBar = pcall(function()
-            return instanceof(el, "ISScrollBar")
-        end)
-        if okS and isBar then return end
+        if elementIsA(el, "ISScrollBar") then return end
         local ok, y = pcall(function() return el:getY() end)
         if ok and type(y) == "number" and y >= insertY then
             pcall(function() el:setY(y + dy) end)
@@ -356,32 +416,118 @@ local function addEyeRow(creationMain, panel, y, labelText, onSelect)
     return lbl, combo
 end
 
--- Build (or rebuild) the eye row(s). With the heterochromia trait the
--- single dropdown is replaced by a left and a right one.
+-- Hover previews a value without committing it.
+local function hookPreview(combo, creationMain, key)
+    combo.pointOnItem = function(_self, index)
+        if _self.lastIndex ~= index then
+            previewPick(creationMain, key, index)
+            _self.lastIndex = index
+        end
+    end
+    combo.onMouseMoveOutside = function(_self)
+        applyCurrent(creationMain)
+    end
+end
+
+-- Vanilla's section headers ("Body", "Hair", ...) are ISLabels carrying the
+-- section title, and are not stored on the panel. Find the Body one so our
+-- section can sit directly above it.
+local function findBodyHeader(panel)
+    local okC, children = pcall(function() return panel:getChildren() end)
+    if not okC or type(children) ~= "table" then return nil end
+    local wanted = getText("UI_characreation_body")
+    for _, el in pairs(children) do
+        if elementIsA(el, "ISLabel") then
+            local okN, name = pcall(function() return el:getName() end)
+            if okN and name == wanted then return el end
+        end
+    end
+    return nil
+end
+
+-- One section header in the vanilla style: a medium left-aligned title with a
+-- thin divider under it.
+local function addSectionHeader(panel, y, title)
+    local lbl = ISLabel:new(0, y, FONT_HGT_MEDIUM, title, 1, 1, 1, 1, UIFont.Medium, true)
+    lbl:initialise()
+    lbl:instantiate()
+    panel:addChild(lbl)
+    if panel.reposTable then table.insert(panel.reposTable, lbl) end
+
+    local rect = ISRect:new(0, y + FONT_HGT_MEDIUM + 5, 0, 1, 1, 0.3, 0.3, 0.3)
+    rect:initialise()
+    rect:instantiate()
+    panel:addChild(rect)
+    if panel.dividerResizeTable then table.insert(panel.dividerResizeTable, rect) end
+    return lbl, rect
+end
+
+-- Build (or rebuild) the Eyes section: a header of its own above the Body
+-- section, then eye shape, eye height, lash length, and colour (one dropdown,
+-- or left and right with the trait).
 local function buildEyeRows(creationMain)
     local panel = creationMain.characterPanel
     if not panel then return end
-    -- Slide in under the body divider (above skin color): shift everything
-    -- at/below the skin row down. Layout only ever sets X/width, so Y
-    -- shifts persist through resizes and IHM centering.
-    local anchor = creationMain.skinColorLbl
-    local okA, insertY = pcall(function() return anchor:getY() end)
-    if not anchor or not okA then return end
+    -- Anchor on the Body section header so the whole Eyes block lands above
+    -- it. Layout only ever sets X/width, so Y shifts persist through resizes.
+    local headerY = nil
+    local bodyHeader = findBodyHeader(panel)
+    if bodyHeader then
+        local okY, y = pcall(function() return bodyHeader:getY() end)
+        if okY and type(y) == "number" then headerY = y end
+    end
+    if not headerY then
+        -- Fallback for a creation screen whose headers were replaced: sit
+        -- above the skin row instead.
+        local anchor = creationMain.skinColorLbl
+        local okA, y = pcall(function() return anchor:getY() end)
+        if not anchor or not okA then return end
+        headerY = y
+    end
 
     local two = heterochromiaMode()
-    local rows = two and 2 or 1
-    local shift = ROW_GAP * rows
-    shiftBelow(panel, insertY, shift)
+    local colorRows = two and 2 or 1
+    local rows = 3 + colorRows
+    local shift = SECTION_HGT + ROW_GAP * rows
+    shiftBelow(panel, headerY, shift)
     -- Remember the shift so a rebuild can undo it before shifting again.
-    creationMain.hydEyesInsertY = insertY
+    creationMain.hydEyesInsertY = headerY
     creationMain.hydEyesShift = shift
 
+    creationMain.hydEyesSectionLbl, creationMain.hydEyesSectionRect =
+        addSectionHeader(panel, headerY, getText("IGUI_hydEyes_Section"))
+
+    local y = headerY + SECTION_HGT
+    local shapeLbl, shapeCombo = addEyeRow(creationMain, panel, y,
+        getText("IGUI_hydEyes_Shape"), hydEyesOnShape)
+    creationMain.hydEyesShapeLbl = shapeLbl
+    creationMain.hydEyesShapeCombo = shapeCombo
+    fillTypeCombo(shapeCombo, panelTypeIndex(creationMain))
+    hookPreview(shapeCombo, creationMain, "type")
+
+    y = y + ROW_GAP
+    local heightLbl, heightCombo = addEyeRow(creationMain, panel, y,
+        getText("IGUI_hydEyes_Height"), hydEyesOnHeight)
+    creationMain.hydEyesHeightLbl = heightLbl
+    creationMain.hydEyesHeightCombo = heightCombo
+    fillOptionCombo(heightCombo, hydEyesData.Heights, panelHeightIndex(creationMain))
+    hookPreview(heightCombo, creationMain, "height")
+
+    y = y + ROW_GAP
+    local lashLbl, lashCombo = addEyeRow(creationMain, panel, y,
+        getText("IGUI_hydEyes_Lash"), hydEyesOnLash)
+    creationMain.hydEyesLashLbl = lashLbl
+    creationMain.hydEyesLashCombo = lashCombo
+    fillOptionCombo(lashCombo, hydEyesData.LashLengths, lashDisplayIndex(creationMain))
+    hookPreview(lashCombo, creationMain, "lash")
+
+    y = y + ROW_GAP
     if two then
-        local leftLbl, leftCombo = addEyeRow(creationMain, panel, insertY,
+        local leftLbl, leftCombo = addEyeRow(creationMain, panel, y,
             getText("IGUI_hydEyes_LeftEye"), hydEyesOnSelect)
         creationMain.hydEyesLbl = leftLbl
         creationMain.hydEyesCombo = leftCombo
-        local rightLbl, rightCombo = addEyeRow(creationMain, panel, insertY + ROW_GAP,
+        local rightLbl, rightCombo = addEyeRow(creationMain, panel, y + ROW_GAP,
             getText("IGUI_hydEyes_RightEye"), hydEyesOnSelectRight)
         creationMain.hydEyesRightLbl = rightLbl
         creationMain.hydEyesRightCombo = rightCombo
@@ -395,40 +541,16 @@ local function buildEyeRows(creationMain)
             setRightChoice(creationMain, right)
             fillCombo(rightCombo, right)
         end
-        leftCombo.pointOnItem = function(_self, _index)
-            if _self.lastIndex ~= _index then
-                previewEntry(creationMain, _index, false)
-                _self.lastIndex = _index
-            end
-        end
-        rightCombo.pointOnItem = function(_self, _index)
-            if _self.lastIndex ~= _index then
-                previewEntry(creationMain, _index, true)
-                _self.lastIndex = _index
-            end
-        end
-        leftCombo.onMouseMoveOutside = function(_self)
-            applyCurrent(creationMain)
-        end
-        rightCombo.onMouseMoveOutside = function(_self)
-            applyCurrent(creationMain)
-        end
+        hookPreview(leftCombo, creationMain, "left")
+        hookPreview(rightCombo, creationMain, "right")
     else
-        local lbl, combo = addEyeRow(creationMain, panel, insertY,
+        local lbl, combo = addEyeRow(creationMain, panel, y,
             getText("IGUI_hydEyes_Eyes"), hydEyesOnSelect)
         creationMain.hydEyesLbl = lbl
         creationMain.hydEyesCombo = combo
         creationMain.hydEyesRightCombo = nil
         fillCombo(combo, panelChoiceIndex(creationMain))
-        combo.pointOnItem = function(_self, _index)
-            if _self.lastIndex ~= _index then
-                previewEntry(creationMain, _index, false)
-                _self.lastIndex = _index
-            end
-        end
-        combo.onMouseMoveOutside = function(_self)
-            applyCurrent(creationMain)
-        end
+        hookPreview(combo, creationMain, "left")
     end
     creationMain.hydEyesTwoRows = two
     -- The trait may not be on the player object yet at spawn: keep the
@@ -436,7 +558,7 @@ local function buildEyeRows(creationMain)
     hydEyesData.creationHeterochromia = two
 
     -- The layout pass that sizes table members ran at build; re-run it so
-    -- the late-added row gets its width (IHM overrides this same method).
+    -- the late-added rows get their width (IHM overrides this same method).
     pcall(function() panel:positionRelativeToScrollBar() end)
 
     applyCurrent(creationMain)
@@ -460,18 +582,24 @@ local function clearEyeRows(creationMain)
                 if list[i] == el then table.remove(list, i) end
             end
         end
+        dropFrom(panel.reposTable)
         dropFrom(panel.repos2Table)
         dropFrom(panel.repos3Table)
         dropFrom(panel.comboResizeTable)
+        dropFrom(panel.dividerResizeTable)
     end
-    drop(creationMain.hydEyesLbl)
-    drop(creationMain.hydEyesCombo)
-    drop(creationMain.hydEyesRightLbl)
-    drop(creationMain.hydEyesRightCombo)
-    creationMain.hydEyesLbl = nil
-    creationMain.hydEyesCombo = nil
-    creationMain.hydEyesRightLbl = nil
-    creationMain.hydEyesRightCombo = nil
+    local fields = {
+        "hydEyesSectionLbl", "hydEyesSectionRect",
+        "hydEyesShapeLbl", "hydEyesShapeCombo",
+        "hydEyesHeightLbl", "hydEyesHeightCombo",
+        "hydEyesLashLbl", "hydEyesLashCombo",
+        "hydEyesLbl", "hydEyesCombo",
+        "hydEyesRightLbl", "hydEyesRightCombo",
+    }
+    for _, field in ipairs(fields) do
+        drop(creationMain[field])
+        creationMain[field] = nil
+    end
 end
 
 -- Rebuild the rows when the trait selection changes, so the dropdowns
@@ -564,17 +692,49 @@ local function hookInitClothing()
     end
 end
 
+-- Vanilla zooms the avatar onto the face while the hair or beard dropdown is
+-- open: CharacterCreationMain:prerender() reads hairTypeCombo.expanded /
+-- beardTypeCombo.expanded and calls avatarPanel:setFacePreview(). Wrap it and
+-- add the eye dropdowns to that condition, so they get the same close-up.
+local function hookFacePreviewZoom()
+    if type(CharacterCreationMain) ~= "table" then return end
+    local original = CharacterCreationMain.prerender
+    if type(original) ~= "function" then return end
+    -- Already wrapped (or wrapped by us before a replacement): do not stack.
+    if CharacterCreationMain.hydEyesZoomWrapped == original then return end
+    local function wrapper(self, ...)
+        local result = original(self, ...)
+        if self.avatarPanel then
+            local open = false
+            for _, field in ipairs({
+                "hydEyesShapeCombo",
+                "hydEyesHeightCombo",
+                "hydEyesLashCombo",
+                "hydEyesCombo",
+                "hydEyesRightCombo",
+            }) do
+                local combo = self[field]
+                if combo and combo.expanded then
+                    open = true
+                    break
+                end
+            end
+            -- Only ever turn the close-up on: the original already turned it
+            -- off when hair and beard are both closed.
+            if open then self.avatarPanel:setFacePreview(true) end
+        end
+        return result
+    end
+    CharacterCreationMain.hydEyesZoomWrapped = wrapper
+    CharacterCreationMain.prerender = wrapper
+end
+
 local function TryInstall()
     if type(CharacterCreationMain) ~= "table" then return end
 
     hookTraitChanges()
     hookInitClothing()
-
-    -- Insert after the full build (first show): slide the row in under the
-    -- body divider and shift everything below down. Layout only ever sets
-    -- X/width, so Y shifts survive resizes and IHM centering. Hooking any
-    -- builder method loses to IHM's wholesale replacements; doing it here
-    -- depends on nothing but the finished panel.
+    hookFacePreviewZoom()
 
     -- Outfit changes wipe worn items: put the eyes back on afterwards.
     if type(CharacterCreationMain.randomGenericOutfit) == "function"
@@ -611,6 +771,21 @@ local function TryInstall()
                     self.hydEyesRightCombo.selected = right
                 end
             end
+            if #hydEyesData.Types > 0 then
+                local typ = ZombRand(#hydEyesData.Types) + 1
+                setTypeChoice(self, typ)
+                if self.hydEyesShapeCombo then self.hydEyesShapeCombo.selected = typ end
+            end
+            if #hydEyesData.Heights > 0 then
+                local height = ZombRand(#hydEyesData.Heights) + 1
+                setHeightChoice(self, height)
+                if self.hydEyesHeightCombo then self.hydEyesHeightCombo.selected = height end
+            end
+            if #hydEyesData.LashLengths > 0 then
+                local lash = ZombRand(#hydEyesData.LashLengths) + 1
+                setLashChoice(self, lash)
+                if self.hydEyesLashCombo then self.hydEyesLashCombo.selected = lash end
+            end
             return originalDice(self, ...)
         end
     end
@@ -641,7 +816,7 @@ local function TryInstall()
         end
     end
 
-    -- The preview desc never spawns: strip our eyes at Play so the engine
+    -- The preview desc never spawns: strip our layers at Play so the engine
     -- never resolves them during Dressup, then wear post-spawn instead.
     if type(CharacterCreationMain.onOptionMouseDown) == "function"
         and not CharacterCreationMain.hydEyesPlayHooked then
@@ -651,11 +826,7 @@ local function TryInstall()
             if button and button.internal == "NEXT" then
                 pcall(function()
                     local desc = MainScreen.instance.desc
-                    if desc then
-                        clearSlot(desc, "hydeyes:eyes")
-                        clearSlot(desc, "hydeyes:lefteye")
-                        clearSlot(desc, "hydeyes:righteye")
-                    end
+                    if desc then hydEyesData.clearWorn(desc) end
                 end)
             end
             return originalPlay(self, button, ...)
@@ -670,13 +841,18 @@ local function TryInstall()
             local ok, player = pcall(getSpecificPlayer, n)
             local index = hydEyesChoices[n] or hydEyesChoice or 1
             local right = hydEyesRightChoices[n] or hydEyesRightChoice or index
+            local typ = hydEyesTypeChoices[n] or hydEyesTypeChoice
+                or hydEyesData.DefaultTypeIndex or 1
+            local height = hydEyesHeightChoices[n] or hydEyesHeightChoice
+                or hydEyesData.DefaultHeightIndex or 1
+            local lash = hydEyesLashChoices[n] or hydEyesLashChoice
             if ok and player and hydEyesData and hydEyesData.wearOn then
-                hydEyesData.wearOn(player, index, right)
+                hydEyesData.wearOn(player, index, right, typ, height, lash)
             end
         end)
     end
 
-    -- Build the row on first show (and refresh third-party entries after).
+    -- Build the rows on first show (and refresh third-party entries after).
     if type(CharacterCreationMain.setVisible) == "function"
         and not CharacterCreationMain.hydEyesVisibleHooked then
         CharacterCreationMain.hydEyesVisibleHooked = true
@@ -684,19 +860,33 @@ local function TryInstall()
         CharacterCreationMain.setVisible = function(self, visible, ...)
             originalVisible(self, visible, ...)
             if visible then
-                -- The trait can change between visits, and so can the mod
-                -- options fallback: rebuild the rows when the shape changes.
+                -- The trait can change between visits: rebuild the rows when
+                -- the shape changes.
                 if self.hydEyesCombo and self.hydEyesTwoRows ~= heterochromiaMode() then
                     clearEyeRows(self)
                 end
-                if not self.hydEyesCombo then buildEyeRows(self) end
+                if not self.hydEyesCombo or not self.hydEyesShapeCombo then
+                    if self.hydEyesCombo then clearEyeRows(self) end
+                    buildEyeRows(self)
+                end
                 if self.hydEyesCombo then
                     fillCombo(self.hydEyesCombo, panelChoiceIndex(self))
                 end
                 if self.hydEyesRightCombo then
                     fillCombo(self.hydEyesRightCombo, panelRightChoiceIndex(self))
                 end
-                -- Re-wear so a Mod Options fallback toggle takes effect here.
+                if self.hydEyesShapeCombo then
+                    fillTypeCombo(self.hydEyesShapeCombo, panelTypeIndex(self))
+                end
+                if self.hydEyesHeightCombo then
+                    fillOptionCombo(self.hydEyesHeightCombo, hydEyesData.Heights,
+                        panelHeightIndex(self))
+                end
+                if self.hydEyesLashCombo then
+                    fillOptionCombo(self.hydEyesLashCombo, hydEyesData.LashLengths,
+                        lashDisplayIndex(self))
+                end
+                -- Re-wear so changes made elsewhere take effect here.
                 applyCurrent(self)
             end
         end
