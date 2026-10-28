@@ -20,6 +20,10 @@
 --   * Spongie's Character Customisation and Tomb's Player Body: their face
 --     art is worn on SPNCC:Face and is drawn over our eye overlay. The
 --     appearance screen re-applies our layers after they refresh the preview.
+--   * Hyde Co. Character Creator: it hides vanilla's body/hair/beard rows and
+--     lifts the voice block up under the name, which is where our Eyes section
+--     goes. The eyes are put on top there and the voice block is moved down
+--     below them.
 --
 -- Left and right eyes are two separate items on two body locations
 -- (hydeyes:lefteye / hydeyes:righteye), the lashes have their own pair
@@ -380,6 +384,142 @@ local function hookCustomisationPreview()
     end
 end
 
+-- Hyde Co. Character Creator lifts vanilla's voice block up under the name,
+-- which is the slot our Eyes section takes. The eyes stay on top: the block
+-- moves up to the voice's place and the voice block follows it down.
+local HYDE_VOICE_WIDGETS = {
+    "voiceLbl", "voiceRect", "voiceTypeLbl", "voiceTypeCombo",
+    "voicePitchLbl", "voicePitchSlider", "voiceDemoButton",
+}
+
+local HYDE_EYE_WIDGETS = {
+    "hydEyesSectionLbl", "hydEyesSectionRect",
+    "hydEyesShapeLbl", "hydEyesShapeCombo",
+    "hydEyesHeightLbl", "hydEyesHeightCombo",
+    "hydEyesLashLbl", "hydEyesLashCombo",
+    "hydEyesLbl", "hydEyesCombo",
+    "hydEyesRightLbl", "hydEyesRightCombo",
+}
+
+local function widgetY(widget)
+    if not (widget and widget.getY) then return nil end
+    local ok, y = pcall(function() return widget:getY() end)
+    if ok and type(y) == "number" then return y end
+    return nil
+end
+
+local function moveWidgets(screen, names, dy)
+    if dy == 0 then return end
+    for _, name in ipairs(names) do
+        local widget = screen[name]
+        if widget and widget.getY and widget.setY then
+            pcall(function() widget:setY(widget:getY() + dy) end)
+        end
+    end
+end
+
+-- Spongie's Character Customisation adds its "Change Appearance" button to the
+-- same column. It belongs under the voice block, not wherever the rows we
+-- pushed down left it.
+local function placeCustomisationButton(screen)
+    local button = screen.customisationButton
+    if not (button and button.getY and button.setY) then return end
+    local low = 0
+    for _, name in ipairs(HYDE_VOICE_WIDGETS) do
+        local widget = screen[name]
+        if widget and widget.getBottom then
+            local ok, bottom = pcall(function() return widget:getBottom() end)
+            if ok and type(bottom) == "number" and bottom > low then
+                low = bottom
+            end
+        end
+    end
+    if low <= 0 then return end
+    local want = low + 16
+    local now = widgetY(button)
+    if now and math.abs(now - want) > 0.5 then
+        pcall(function() button:setY(want) end)
+    end
+end
+
+-- The upper column shows everything it holds -- name, eyes, voice and
+-- Spongie's button -- without a scrollbar of its own. Its height is handed to
+-- the Hyde Co. stack as the name section's, so their column starts below it.
+local function fitUpperPanel(screen)
+    local panel = screen.characterPanel
+    if not (panel and panel.children) then return end
+    local low = 0
+    pcall(function()
+        for _, child in pairs(panel.children) do
+            if child and child ~= panel.vscroll and child ~= panel.hscroll
+                and child.getBottom and child.getIsVisible
+                and child:getIsVisible() then
+                local h = child.getHeight and child:getHeight() or 0
+                if type(h) == "number" and h > 4 then
+                    local bottom = child:getBottom()
+                    if type(bottom) == "number" and bottom > low then
+                        low = bottom
+                    end
+                end
+            end
+        end
+    end)
+    if low <= 0 then return end
+    local needed = math.floor(low + 16)
+    local LD = HydeCoCharacterCreatorPlus
+    if type(LD) == "table" and LD.Stage
+        and math.abs((LD.Stage.nameContentH or 0) - needed) > 1 then
+        LD.Stage.nameContentH = needed
+    end
+    local okH, height = pcall(function() return panel:getHeight() end)
+    if okH and type(height) == "number" and math.abs(height - needed) > 1 then
+        pcall(function() panel:setHeight(needed) end)
+    end
+end
+
+-- Idempotent: once the eyes sit where the voice block was and the voice block
+-- sits under them, every call is a no-op. Runs from the voice lift, which
+-- their panel calls every frame.
+local function arrangeEyesAboveVoice(screen)
+    if not screen or not screen.voiceLbl or not screen.hydEyesSectionLbl then
+        return
+    end
+    local blockH = screen.hydEyesShift
+    local voiceY = widgetY(screen.voiceLbl)
+    local headerY = widgetY(screen.hydEyesSectionLbl)
+    if type(blockH) ~= "number" or not voiceY or not headerY then return end
+
+    if headerY > voiceY then
+        moveWidgets(screen, HYDE_EYE_WIDGETS, voiceY - headerY)
+        screen.hydEyesInsertY = voiceY
+        headerY = voiceY
+    end
+    -- The voice block belongs directly under the eyes.
+    local wantVoiceY = headerY + blockH
+    local nowVoiceY = widgetY(screen.voiceLbl)
+    if nowVoiceY and nowVoiceY < wantVoiceY then
+        moveWidgets(screen, HYDE_VOICE_WIDGETS, wantVoiceY - nowVoiceY)
+    end
+
+    placeCustomisationButton(screen)
+    fitUpperPanel(screen)
+end
+
+local function hookHydeCo()
+    if type(HydeCoCCPClothingPanel) ~= "table" then return end
+    local original = HydeCoCCPClothingPanel.liftVoice
+    if type(original) ~= "function"
+        or HydeCoCCPClothingPanel.hydEyesVoiceHooked then
+        return
+    end
+    HydeCoCCPClothingPanel.hydEyesVoiceHooked = true
+    HydeCoCCPClothingPanel.liftVoice = function(self, ...)
+        local result = original(self, ...)
+        pcall(arrangeEyesAboveVoice, self and self.screen)
+        return result
+    end
+end
+
 local function TryInstall()
     hookGrid()
     hookIDCards()
@@ -387,6 +527,7 @@ local function TryInstall()
     hookModelDesc()
     hookGridPanel()
     hookCustomisationPreview()
+    hookHydeCo()
 end
 
 TryInstall()
