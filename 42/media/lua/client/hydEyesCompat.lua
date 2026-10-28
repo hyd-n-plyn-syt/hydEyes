@@ -24,6 +24,9 @@
 --     lifts the voice block up under the name, which is where our Eyes section
 --     goes. The eyes are put on top there and the voice block is moved down
 --     below them.
+--   * Project Spongie-Life / Project A-Life: handled in its own file,
+--     hydEyesPSLSetup.lua, because it carries the face sheet that decides
+--     which eyes each NPC face rolls and is meant to be edited by hand.
 --
 -- Left and right eyes are two separate items on two body locations
 -- (hydeyes:lefteye / hydeyes:righteye), the lashes have their own pair
